@@ -263,9 +263,13 @@ a:hover {
    Tables
    ============================================ */
 .table {
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
     --bs-table-bg: transparent;
     --bs-table-color: var(--text-primary);
+    --bs-table-striped-color: var(--text-primary);
+    --bs-table-striped-bg: var(--bg-table-stripe);
+    --bs-table-hover-color: var(--text-primary);
+    --bs-table-hover-bg: rgba(229, 161, 0, 0.05);
 }
 
 .table thead.ecu-thead {
@@ -273,7 +277,7 @@ a:hover {
 }
 
 .table thead.ecu-thead th {
-    color: var(--ecu-gold);
+    color: var(--ecu-gold) !important;
     font-weight: 600;
     font-size: 0.78rem;
     text-transform: uppercase;
@@ -283,28 +287,24 @@ a:hover {
     white-space: nowrap;
 }
 
-.table tbody td {
+.table tbody td,
+.table tbody th {
     padding: 0.85rem 1rem;
     vertical-align: middle;
     border-color: var(--border-card);
-}
-
-.table-hover tbody tr:hover {
-    background: rgba(229, 161, 0, 0.05) !important;
-    --bs-table-hover-bg: rgba(229, 161, 0, 0.05);
-}
-
-.table-striped > tbody > tr:nth-of-type(odd) {
-    --bs-table-striped-bg: var(--bg-table-stripe);
-    --bs-table-striped-color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 
 .table-hover > tbody > tr:hover {
-    --bs-table-hover-color: var(--text-primary);
+    background: rgba(229, 161, 0, 0.05) !important;
 }
 
-.table > tbody > tr > td {
-    color: var(--text-primary);
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    color: var(--text-primary) !important;
+}
+
+.table-hover > tbody > tr:hover > * {
+    color: var(--text-primary) !important;
 }
 
 /* ============================================
