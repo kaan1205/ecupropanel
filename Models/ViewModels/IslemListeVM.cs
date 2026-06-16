@@ -10,6 +10,11 @@ public class IslemListeVM
     public int? MinKM { get; set; }
     public int? MaxKM { get; set; }
 
+    public int Sayfa { get; set; } = 1;
+    public int SayfaBoyutu { get; set; } = 20;
+    public int ToplamKayit { get; set; }
+    public int ToplamSayfa => (int)Math.Ceiling((double)ToplamKayit / SayfaBoyutu);
+
     public List<IslemSatirVM> Islemler { get; set; } = new();
     public List<KullaniciSecVM> KullaniciListesi { get; set; } = new();
 }

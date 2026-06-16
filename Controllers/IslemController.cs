@@ -45,6 +45,33 @@ public class IslemController : Controller
     }
 
     [HttpGet]
+    public async Task<IActionResult> Duzenle(int id)
+    {
+        var model = await _islemService.DuzenleDetay(id);
+        if (model == null) return NotFound();
+        return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Duzenle(IslemDuzenleVM model, List<int>? SilinenFotolar)
+    {
+        if (!ModelState.IsValid)
+        {
+            var detay = await _islemService.DuzenleDetay(model.Id);
+            if (detay != null) model.MevcutFotograflar = detay.MevcutFotograflar;
+            return View(model);
+        }
+
+        var kullaniciId = User.GetId();
+        var sonuc = await _islemService.Guncelle(model, kullaniciId, SilinenFotolar);
+        if (!sonuc) return NotFound();
+
+        TempData["Basari"] = "İşlem başarıyla güncellendi.";
+        return RedirectToAction("Detay", new { id = model.Id });
+    }
+
+    [HttpGet]
     public async Task<IActionResult> Detay(int id)
     {
         var islem = await _islemService.Detay(id);

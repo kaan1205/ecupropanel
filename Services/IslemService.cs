@@ -46,8 +46,13 @@ public class IslemService
         if (filtre.MaxKM.HasValue)
             query = query.Where(i => i.AracKM <= filtre.MaxKM.Value);
 
+        if (filtre.Sayfa < 1) filtre.Sayfa = 1;
+        filtre.ToplamKayit = await query.CountAsync();
+
         var islemler = await query
             .OrderByDescending(i => i.EklenmeTarihi)
+            .Skip((filtre.Sayfa - 1) * filtre.SayfaBoyutu)
+            .Take(filtre.SayfaBoyutu)
             .Select(i => new IslemSatirVM
             {
                 Id = i.Id,
@@ -108,6 +113,75 @@ public class IslemService
 
         await _logService.LogEkle("EKLE", islem.Id);
         return islem.Id;
+    }
+
+    public async Task<IslemDuzenleVM?> DuzenleDetay(int id)
+    {
+        var islem = await _db.Islemler
+            .Include(i => i.Fotograflar)
+            .FirstOrDefaultAsync(i => i.Id == id);
+
+        if (islem == null) return null;
+
+        return new IslemDuzenleVM
+        {
+            Id = islem.Id,
+            AracPlaka = islem.AracPlaka,
+            AracSahibi = islem.AracSahibi,
+            AracKM = islem.AracKM,
+            YapilanIslem = islem.YapilanIslem,
+            MevcutFotograflar = islem.Fotograflar.ToList()
+        };
+    }
+
+    public async Task<bool> Guncelle(IslemDuzenleVM vm, int kullaniciId, List<int>? silinenFotoIdler)
+    {
+        var islem = await _db.Islemler
+            .Include(i => i.Fotograflar)
+            .FirstOrDefaultAsync(i => i.Id == vm.Id);
+
+        if (islem == null) return false;
+
+        islem.AracPlaka = vm.AracPlaka.ToUpperInvariant().Trim();
+        islem.AracSahibi = vm.AracSahibi.Trim();
+        islem.AracKM = vm.AracKM;
+        islem.YapilanIslem = vm.YapilanIslem.Trim();
+        islem.GuncelleyenId = kullaniciId;
+        islem.GuncellemeTarihi = DateTime.Now;
+
+        if (silinenFotoIdler?.Count > 0)
+        {
+            var silinecekler = islem.Fotograflar
+                .Where(f => silinenFotoIdler.Contains(f.Id))
+                .ToList();
+
+            foreach (var foto in silinecekler)
+            {
+                var fizikselYol = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", foto.DosyaYolu.TrimStart('/'));
+                if (File.Exists(fizikselYol))
+                    File.Delete(fizikselYol);
+                _db.IslemFotolari.Remove(foto);
+            }
+        }
+
+        if (vm.YeniFotograflar?.Count > 0)
+        {
+            var kaydedilenler = await _fileService.FotograflariKaydet(vm.YeniFotograflar, islem.Id);
+            foreach (var (yol, orijinalAd) in kaydedilenler)
+            {
+                _db.IslemFotolari.Add(new IslemFoto
+                {
+                    IslemId = islem.Id,
+                    DosyaYolu = yol,
+                    OrijinalAd = orijinalAd,
+                    YuklemeTarihi = DateTime.Now
+                });
+            }
+        }
+
+        await _db.SaveChangesAsync();
+        await _logService.LogEkle("GUNCELLE", islem.Id);
+        return true;
     }
 
     public async Task<Islem?> Detay(int id)

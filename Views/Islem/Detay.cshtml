@@ -14,6 +14,9 @@
                 <a asp-action="Index" class="btn btn-outline-ecu">
                     <i class="bi bi-arrow-left me-1"></i>Liste
                 </a>
+                <a asp-action="Duzenle" asp-route-id="@Model.Id" class="btn btn-ecu">
+                    <i class="bi bi-pencil me-1"></i>Düzenle
+                </a>
                 <form asp-action="Sil" asp-route-id="@Model.Id" method="post"
                       onsubmit="return confirm('Bu işlemi silmek istediğinize emin misiniz?');">
                     @Html.AntiForgeryToken()

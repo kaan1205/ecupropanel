@@ -551,3 +551,20 @@ input.text-uppercase::placeholder {
         height: 32px;
     }
 }
+
+.page-link {
+    background: var(--bg-card) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+.page-link:hover {
+    background: var(--bg-card-header) !important;
+    color: var(--ecu-gold) !important;
+}
+
+.page-item.active .page-link {
+    background: var(--ecu-gold) !important;
+    border-color: var(--ecu-gold) !important;
+    color: #000 !important;
+}

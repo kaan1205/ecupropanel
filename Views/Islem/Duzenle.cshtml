@@ -1,0 +1,181 @@
+@model IslemDuzenleVM
+@{
+    ViewData["Title"] = "İşlem Düzenle";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="page-title mb-4"><i class="bi bi-pencil-square"></i>İşlem Düzenle</h2>
+
+        <div class="card">
+            <div class="card-header ecu-header">
+                <i class="bi bi-car-front me-1"></i>Araç & İşlem Bilgileri
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Duzenle" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" style="font-size:0.85rem;"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="AracPlaka" class="form-label">ARAÇ PLAKA <span class="text-ecu">*</span></label>
+                            <input asp-for="AracPlaka" class="form-control text-uppercase" />
+                            <span asp-validation-for="AracPlaka" class="text-danger" style="font-size:0.8rem;"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="AracSahibi" class="form-label">ARAÇ SAHİBİ <span class="text-ecu">*</span></label>
+                            <input asp-for="AracSahibi" class="form-control" />
+                            <span asp-validation-for="AracSahibi" class="text-danger" style="font-size:0.8rem;"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="AracKM" class="form-label">KİLOMETRE <span class="text-ecu">*</span></label>
+                        <div class="input-group">
+                            <input asp-for="AracKM" type="number" class="form-control" min="0" max="9999999" />
+                            <span class="input-group-text" style="background:var(--bg-card-header);color:var(--text-secondary);border-color:var(--border-color);">km</span>
+                        </div>
+                        <span asp-validation-for="AracKM" class="text-danger" style="font-size:0.8rem;"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="YapilanIslem" class="form-label">YAPILAN İŞLEM <span class="text-ecu">*</span></label>
+                        <textarea asp-for="YapilanIslem" class="form-control" rows="4"></textarea>
+                        <span asp-validation-for="YapilanIslem" class="text-danger" style="font-size:0.8rem;"></span>
+                    </div>
+
+                    @if (Model.MevcutFotograflar.Count > 0)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">MEVCUT FOTOĞRAFLAR</label>
+                            <div class="d-flex flex-wrap gap-2" id="mevcutFotolar">
+                                @foreach (var foto in Model.MevcutFotograflar)
+                                {
+                                    <div class="position-relative d-inline-block" id="foto-@foto.Id">
+                                        <img src="@foto.DosyaYolu" alt="@foto.OrijinalAd"
+                                             style="width:100px;height:100px;object-fit:cover;border-radius:8px;" />
+                                        <button type="button" class="btn-foto-sil"
+                                                onclick="fotoSil(@foto.Id)"
+                                                style="position:absolute;top:2px;right:2px;background:rgba(220,53,69,0.9);color:white;border:none;border-radius:50%;width:22px;height:22px;font-size:14px;line-height:1;cursor:pointer;">
+                                            &times;
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                            <div id="silinenContainer"></div>
+                        </div>
+                    }
+
+                    <div class="mb-4">
+                        <label class="form-label">YENİ FOTOĞRAF EKLE</label>
+                        <input id="fotoInput" name="YeniFotograflar" type="file" style="display:none;" multiple
+                               accept=".jpg,.jpeg,.png,.webp" />
+                        <input id="fotoInputKamera" type="file" style="display:none;"
+                               accept="image/*" capture="environment" />
+                        <div class="d-flex gap-2">
+                            <button type="button" id="btnFotoSec" class="btn btn-outline-ecu btn-sm">
+                                <i class="bi bi-images me-1"></i>Fotoğraf Seç
+                            </button>
+                            <button type="button" id="btnFotoCek" class="btn btn-outline-ecu btn-sm">
+                                <i class="bi bi-camera me-1"></i>Fotoğraf Çek
+                            </button>
+                        </div>
+                        <div id="fotoOnizleme" class="d-flex flex-wrap gap-2 mt-2"></div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-ecu">
+                            <i class="bi bi-check-circle me-1"></i>Güncelle
+                        </button>
+                        <a asp-action="Detay" asp-route-id="@Model.Id" class="btn btn-outline-ecu">
+                            <i class="bi bi-arrow-left me-1"></i>İptal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    (function() {
+        var silinenContainer = document.getElementById('silinenContainer');
+
+        window.fotoSil = function(id) {
+            var el = document.getElementById('foto-' + id);
+            if (el) el.remove();
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'SilinenFotolar';
+            input.value = id;
+            silinenContainer.appendChild(input);
+        };
+
+        var container = document.getElementById('fotoOnizleme');
+        var fotoInput = document.getElementById('fotoInput');
+        var fotoInputKamera = document.getElementById('fotoInputKamera');
+        var btnFotoSec = document.getElementById('btnFotoSec');
+        var btnFotoCek = document.getElementById('btnFotoCek');
+        var birikimliFotolar = [];
+
+        function renderOnizleme() {
+            container.innerHTML = '';
+            birikimliFotolar.forEach(function(file, index) {
+                var wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+                wrapper.style.display = 'inline-block';
+
+                var reader = new FileReader();
+                reader.onload = function(ev) {
+                    var img = document.createElement('img');
+                    img.src = ev.target.result;
+                    img.style.width = '100px';
+                    img.style.height = '100px';
+                    img.style.objectFit = 'cover';
+                    img.style.borderRadius = '8px';
+                    wrapper.appendChild(img);
+
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.innerHTML = '&times;';
+                    btn.style.cssText = 'position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.7);color:white;border:none;border-radius:50%;width:22px;height:22px;font-size:14px;line-height:1;cursor:pointer;';
+                    btn.onclick = function() {
+                        birikimliFotolar.splice(index, 1);
+                        guncelleFormInput();
+                        renderOnizleme();
+                    };
+                    wrapper.appendChild(btn);
+                };
+                reader.readAsDataURL(file);
+                container.appendChild(wrapper);
+            });
+        }
+
+        function guncelleFormInput() {
+            var dt = new DataTransfer();
+            birikimliFotolar.forEach(function(f) { dt.items.add(f); });
+            fotoInput.files = dt.files;
+        }
+
+        function dosyaEkle(files) {
+            for (var i = 0; i < files.length; i++) {
+                if (!files[i].type.startsWith('image/')) continue;
+                birikimliFotolar.push(files[i]);
+            }
+            guncelleFormInput();
+            renderOnizleme();
+        }
+
+        btnFotoSec.addEventListener('click', function() { fotoInput.click(); });
+        btnFotoCek.addEventListener('click', function() { fotoInputKamera.click(); });
+
+        fotoInput.addEventListener('change', function(e) { dosyaEkle(e.target.files); });
+        fotoInputKamera.addEventListener('change', function(e) {
+            dosyaEkle(e.target.files);
+            fotoInputKamera.value = '';
+        });
+    })();
+</script>
+}

@@ -15,7 +15,7 @@
     <div class="stat-item">
         <div class="stat-icon gold"><i class="bi bi-car-front-fill"></i></div>
         <div>
-            <div class="stat-value">@Model.Islemler.Count</div>
+            <div class="stat-value">@Model.ToplamKayit</div>
             <div class="stat-label">Toplam İşlem</div>
         </div>
     </div>
@@ -162,9 +162,51 @@ else
             </table>
         </div>
     </div>
-    <p class="text-center mt-3" style="color: var(--text-muted); font-size:0.85rem;">
-        Toplam <strong style="color: var(--ecu-red);">@Model.Islemler.Count</strong> kayıt
-    </p>
+    <div class="d-flex justify-content-between align-items-center mt-3 px-2">
+        <p class="mb-0" style="color: var(--text-muted); font-size:0.85rem;">
+            Toplam <strong style="color: var(--ecu-red);">@Model.ToplamKayit</strong> kayıt
+            — Sayfa @Model.Sayfa / @Model.ToplamSayfa
+        </p>
+
+        @if (Model.ToplamSayfa > 1)
+        {
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    @if (Model.Sayfa > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@SayfaUrl(1)"><i class="bi bi-chevron-double-left"></i></a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="@SayfaUrl(Model.Sayfa - 1)"><i class="bi bi-chevron-left"></i></a>
+                        </li>
+                    }
+
+                    @{
+                        int baslangic = Math.Max(1, Model.Sayfa - 2);
+                        int bitis = Math.Min(Model.ToplamSayfa, Model.Sayfa + 2);
+                    }
+
+                    @for (int i = baslangic; i <= bitis; i++)
+                    {
+                        <li class="page-item @(i == Model.Sayfa ? "active" : "")">
+                            <a class="page-link" href="@SayfaUrl(i)">@i</a>
+                        </li>
+                    }
+
+                    @if (Model.Sayfa < Model.ToplamSayfa)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@SayfaUrl(Model.Sayfa + 1)"><i class="bi bi-chevron-right"></i></a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="@SayfaUrl(Model.ToplamSayfa)"><i class="bi bi-chevron-double-right"></i></a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    </div>
 }
 
 @functions {
@@ -176,4 +218,18 @@ else
         m.EkleyenKullaniciId.HasValue ||
         m.MinKM.HasValue ||
         m.MaxKM.HasValue;
+
+    string SayfaUrl(int sayfa)
+    {
+        var query = new Dictionary<string, string?>();
+        if (!string.IsNullOrEmpty(Model.Plaka)) query["Plaka"] = Model.Plaka;
+        if (!string.IsNullOrEmpty(Model.AracSahibi)) query["AracSahibi"] = Model.AracSahibi;
+        if (Model.BaslangicTarih.HasValue) query["BaslangicTarih"] = Model.BaslangicTarih.Value.ToString("yyyy-MM-dd");
+        if (Model.BitisTarih.HasValue) query["BitisTarih"] = Model.BitisTarih.Value.ToString("yyyy-MM-dd");
+        if (Model.EkleyenKullaniciId.HasValue) query["EkleyenKullaniciId"] = Model.EkleyenKullaniciId.Value.ToString();
+        if (Model.MinKM.HasValue) query["MinKM"] = Model.MinKM.Value.ToString();
+        if (Model.MaxKM.HasValue) query["MaxKM"] = Model.MaxKM.Value.ToString();
+        query["Sayfa"] = sayfa.ToString();
+        return "/Islem?" + string.Join("&", query.Select(kv => $"{kv.Key}={Uri.EscapeDataString(kv.Value ?? "")}"));
+    }
 }
