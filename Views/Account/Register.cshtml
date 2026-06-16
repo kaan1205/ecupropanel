@@ -4,60 +4,83 @@
     Layout = "_Layout";
 }
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-5">
-        <div class="card shadow">
-            <div class="card-body p-4">
-                <h3 class="text-center mb-4">
-                    <i class="bi bi-person-plus-fill text-primary me-2"></i>Kayıt Ol
-                </h3>
+<div class="row justify-content-center" style="margin-top: 5vh;">
+    <div class="col-md-6 col-lg-5">
+        <div class="card auth-card">
+            <div class="card-body">
+                <div class="auth-header">
+                    <div class="logo-text">
+                        <i class="bi bi-cpu-fill text-ecu"></i>
+                        <span class="brand-ecu">Ecu</span><span class="brand-pro">Pro</span>
+                    </div>
+                    <p>Yeni hesap oluşturun</p>
+                </div>
 
                 <form asp-action="Register" method="post">
                     @Html.AntiForgeryToken()
 
-                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                    <div asp-validation-summary="All" class="text-danger mb-3" style="font-size:0.85rem;"></div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label asp-for="Ad" class="form-label">Ad</label>
+                            <label asp-for="Ad" class="form-label">AD</label>
                             <input asp-for="Ad" class="form-control" autofocus />
-                            <span asp-validation-for="Ad" class="text-danger"></span>
+                            <span asp-validation-for="Ad" class="text-danger" style="font-size:0.8rem;"></span>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label asp-for="Soyad" class="form-label">Soyad</label>
+                            <label asp-for="Soyad" class="form-label">SOYAD</label>
                             <input asp-for="Soyad" class="form-control" />
-                            <span asp-validation-for="Soyad" class="text-danger"></span>
+                            <span asp-validation-for="Soyad" class="text-danger" style="font-size:0.8rem;"></span>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Email" class="form-label">Email</label>
+                        <label asp-for="Email" class="form-label">EMAIL</label>
                         <input asp-for="Email" class="form-control" placeholder="ornek@email.com" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <span asp-validation-for="Email" class="text-danger" style="font-size:0.8rem;"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Sifre" class="form-label">Şifre</label>
+                        <label asp-for="Sifre" class="form-label">ŞİFRE</label>
                         <input asp-for="Sifre" class="form-control" placeholder="En az 6 karakter" />
-                        <span asp-validation-for="Sifre" class="text-danger"></span>
+                        <span asp-validation-for="Sifre" class="text-danger" style="font-size:0.8rem;"></span>
                     </div>
 
-                    <div class="mb-3">
-                        <label asp-for="SifreTekrar" class="form-label">Şifre Tekrar</label>
+                    <div class="mb-4">
+                        <label asp-for="SifreTekrar" class="form-label">ŞİFRE TEKRAR</label>
                         <input asp-for="SifreTekrar" class="form-control" />
-                        <span asp-validation-for="SifreTekrar" class="text-danger"></span>
+                        <span asp-validation-for="SifreTekrar" class="text-danger" style="font-size:0.8rem;"></span>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 mb-3">
+                    <button type="submit" class="btn btn-ecu w-100 mb-3 py-2">
                         <i class="bi bi-person-check me-1"></i>Kayıt Ol
                     </button>
 
-                    <p class="text-center mb-0">
+                    <p class="text-center mb-0" style="font-size:0.85rem; color: var(--text-muted);">
                         Zaten hesabınız var mı?
-                        <a asp-action="Login">Giriş Yap</a>
+                        <a asp-action="Login" class="fw-600">Giriş Yap</a>
                     </p>
                 </form>
             </div>
         </div>
+
+        <div class="text-center mt-3">
+            <button class="btn btn-sm" id="authThemeToggle"
+                    style="color: var(--text-muted); font-size:0.8rem;">
+                <i class="bi bi-circle-half me-1"></i>Tema Değiştir
+            </button>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+<script>
+    document.getElementById('authThemeToggle')?.addEventListener('click', function() {
+        const html = document.documentElement;
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('ecupro-theme', next);
+    });
+</script>
+}

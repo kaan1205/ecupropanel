@@ -4,16 +4,48 @@
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="bi bi-list-ul me-2"></i>İşlem Listesi</h2>
-    <a asp-action="Ekle" class="btn btn-primary">
+    <h2 class="page-title"><i class="bi bi-list-ul"></i>İşlem Listesi</h2>
+    <a asp-action="Ekle" class="btn btn-ecu">
         <i class="bi bi-plus-circle me-1"></i>Yeni İşlem
     </a>
 </div>
 
+<!-- İstatistik Şeridi -->
+<div class="stat-strip">
+    <div class="stat-item">
+        <div class="stat-icon red"><i class="bi bi-car-front-fill"></i></div>
+        <div>
+            <div class="stat-value">@Model.Islemler.Count</div>
+            <div class="stat-label">Toplam İşlem</div>
+        </div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-icon blue"><i class="bi bi-people-fill"></i></div>
+        <div>
+            <div class="stat-value">@Model.KullaniciListesi.Count</div>
+            <div class="stat-label">Kullanıcı</div>
+        </div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-icon green"><i class="bi bi-camera-fill"></i></div>
+        <div>
+            <div class="stat-value">@Model.Islemler.Sum(i => i.FotoSayisi)</div>
+            <div class="stat-label">Fotoğraf</div>
+        </div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-icon gold"><i class="bi bi-calendar-check"></i></div>
+        <div>
+            <div class="stat-value">@Model.Islemler.Count(i => i.EklenmeTarihi.Date == DateTime.Today)</div>
+            <div class="stat-label">Bugün</div>
+        </div>
+    </div>
+</div>
+
 <!-- Filtre Paneli -->
-<div class="card mb-4">
+<div class="card filter-panel mb-4">
     <div class="card-header" data-bs-toggle="collapse" data-bs-target="#filtrePanel" role="button">
-        <i class="bi bi-funnel me-1"></i>Filtreler
+        <i class="bi bi-funnel me-1 text-ecu"></i>Filtreler
         <i class="bi bi-chevron-down float-end"></i>
     </div>
     <div id="filtrePanel" class="collapse @(HasActiveFilter(Model) ? "show" : "")">
@@ -21,23 +53,23 @@
             <form method="get" asp-action="Index">
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <label class="form-label">Plaka</label>
-                        <input asp-for="Plaka" class="form-control" placeholder="34 ABC..." />
+                        <label class="form-label">PLAKA</label>
+                        <input asp-for="Plaka" class="form-control text-uppercase" placeholder="34 ABC..." />
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Araç Sahibi</label>
+                        <label class="form-label">ARAÇ SAHİBİ</label>
                         <input asp-for="AracSahibi" class="form-control" />
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Başlangıç Tarihi</label>
+                        <label class="form-label">BAŞLANGIÇ TARİHİ</label>
                         <input asp-for="BaslangicTarih" type="date" class="form-control" />
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Bitiş Tarihi</label>
+                        <label class="form-label">BİTİŞ TARİHİ</label>
                         <input asp-for="BitisTarih" type="date" class="form-control" />
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Ekleyen</label>
+                        <label class="form-label">EKLEYEN</label>
                         <select asp-for="EkleyenKullaniciId" class="form-select">
                             <option value="">-- Tümü --</option>
                             @foreach (var k in Model.KullaniciListesi)
@@ -47,18 +79,20 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label">Min KM</label>
+                        <label class="form-label">MİN KM</label>
                         <input asp-for="MinKM" type="number" class="form-control" />
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label">Max KM</label>
+                        <label class="form-label">MAX KM</label>
                         <input asp-for="MaxKM" type="number" class="form-control" />
                     </div>
                     <div class="col-md-2 d-flex align-items-end gap-2">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-search me-1"></i>Filtrele
+                        <button type="submit" class="btn btn-ecu">
+                            <i class="bi bi-search me-1"></i>Ara
                         </button>
-                        <a asp-action="Index" class="btn btn-outline-secondary">Temizle</a>
+                        <a asp-action="Index" class="btn btn-outline-ecu">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
                     </div>
                 </div>
             </form>
@@ -70,63 +104,67 @@
 @if (Model.Islemler.Count == 0)
 {
     <div class="alert alert-info">
-        <i class="bi bi-info-circle me-2"></i>Kayıt bulunamadı.
+        <i class="bi bi-info-circle-fill me-2"></i>Kayıt bulunamadı.
     </div>
 }
 else
 {
-    <div class="table-responsive">
-        <table class="table table-hover align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>Plaka</th>
-                    <th>Araç Sahibi</th>
-                    <th>KM</th>
-                    <th>Yapılan İşlem</th>
-                    <th>Ekleyen</th>
-                    <th>Tarih</th>
-                    <th>Foto</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var islem in Model.Islemler)
-                {
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0">
+                <thead class="ecu-thead">
                     <tr>
-                        <td><strong>@islem.AracPlaka</strong></td>
-                        <td>@islem.AracSahibi</td>
-                        <td>@islem.AracKM.ToString("N0") km</td>
-                        <td>
-                            @if (islem.YapilanIslem.Length > 80)
-                            {
-                                @islem.YapilanIslem[..80]<text>...</text>
-                            }
-                            else
-                            {
-                                @islem.YapilanIslem
-                            }
-                        </td>
-                        <td>@islem.EkleyenAd</td>
-                        <td>@islem.EklenmeTarihi.ToString("dd.MM.yyyy HH:mm")</td>
-                        <td>
-                            @if (islem.FotoSayisi > 0)
-                            {
-                                <span class="badge bg-info">
-                                    <i class="bi bi-camera me-1"></i>@islem.FotoSayisi
-                                </span>
-                            }
-                        </td>
-                        <td>
-                            <a asp-action="Detay" asp-route-id="@islem.Id" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-eye me-1"></i>Detay
-                            </a>
-                        </td>
+                        <th>Plaka</th>
+                        <th>Araç Sahibi</th>
+                        <th>KM</th>
+                        <th>Yapılan İşlem</th>
+                        <th>Ekleyen</th>
+                        <th>Tarih</th>
+                        <th>Foto</th>
+                        <th></th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var islem in Model.Islemler)
+                    {
+                        <tr>
+                            <td><span class="plaka-badge">@islem.AracPlaka</span></td>
+                            <td>@islem.AracSahibi</td>
+                            <td>@islem.AracKM.ToString("N0") km</td>
+                            <td>
+                                @if (islem.YapilanIslem.Length > 60)
+                                {
+                                    @islem.YapilanIslem[..60]<text>...</text>
+                                }
+                                else
+                                {
+                                    @islem.YapilanIslem
+                                }
+                            </td>
+                            <td><small>@islem.EkleyenAd</small></td>
+                            <td><small>@islem.EklenmeTarihi.ToString("dd.MM.yyyy HH:mm")</small></td>
+                            <td>
+                                @if (islem.FotoSayisi > 0)
+                                {
+                                    <span class="badge badge-ecu">
+                                        <i class="bi bi-camera me-1"></i>@islem.FotoSayisi
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Detay" asp-route-id="@islem.Id" class="btn btn-sm btn-outline-ecu">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
-    <p class="text-muted">Toplam <strong>@Model.Islemler.Count</strong> kayıt</p>
+    <p class="text-center mt-3" style="color: var(--text-muted); font-size:0.85rem;">
+        Toplam <strong style="color: var(--ecu-red);">@Model.Islemler.Count</strong> kayıt
+    </p>
 }
 
 @functions {

@@ -6,9 +6,9 @@ using AraPanelWeb.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Veritabanı — SQLite (geliştirme) veya SQL Server (production)
-var connectionString = builder.Configuration.GetConnectionString("AraPanelDB");
-var provider = builder.Configuration.GetValue<string>("DatabaseProvider") ?? "Sqlite";
+// Veritabanı
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var provider = builder.Configuration.GetValue<string>("DatabaseProvider") ?? "SqlServer";
 
 if (provider == "SqlServer")
 {
@@ -18,7 +18,7 @@ if (provider == "SqlServer")
 else
 {
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlite(connectionString ?? "Data Source=AraPanelDB.db"));
+        options.UseSqlite(connectionString ?? "Data Source=EcuProPanel.db"));
 }
 
 // Identity
@@ -51,7 +51,7 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Geliştirme ortamında DB'yi otomatik oluştur
+// DB'yi otomatik oluştur (migration)
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();

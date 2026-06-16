@@ -1,15 +1,18 @@
 @model Islem
 @{
-    ViewData["Title"] = $"İşlem Detay - {Model.AracPlaka}";
+    ViewData["Title"] = $"İşlem — {Model.AracPlaka}";
 }
 
 <div class="row justify-content-center">
     <div class="col-md-10">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2><i class="bi bi-car-front me-2"></i>@Model.AracPlaka</h2>
+            <h2 class="page-title">
+                <i class="bi bi-car-front"></i>
+                <span class="plaka-badge" style="font-size:1.1rem;">@Model.AracPlaka</span>
+            </h2>
             <div class="d-flex gap-2">
-                <a asp-action="Index" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i>Listeye Dön
+                <a asp-action="Index" class="btn btn-outline-ecu">
+                    <i class="bi bi-arrow-left me-1"></i>Liste
                 </a>
                 <form asp-action="Sil" asp-route-id="@Model.Id" method="post"
                       onsubmit="return confirm('Bu işlemi silmek istediğinize emin misiniz?');">
@@ -23,22 +26,22 @@
 
         <!-- Araç Bilgileri -->
         <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header ecu-header">
                 <i class="bi bi-info-circle me-1"></i>Araç Bilgileri
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-4 mb-3">
-                        <strong class="text-muted d-block">Plaka</strong>
-                        <span class="fs-5">@Model.AracPlaka</span>
+                        <div class="form-label" style="margin-bottom:0.15rem;">PLAKA</div>
+                        <span class="fs-5 fw-bold">@Model.AracPlaka</span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <strong class="text-muted d-block">Araç Sahibi</strong>
-                        <span class="fs-5">@Model.AracSahibi</span>
+                        <div class="form-label" style="margin-bottom:0.15rem;">ARAÇ SAHİBİ</div>
+                        <span class="fs-5 fw-bold">@Model.AracSahibi</span>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <strong class="text-muted d-block">Kilometre</strong>
-                        <span class="fs-5">@Model.AracKM.ToString("N0") km</span>
+                        <div class="form-label" style="margin-bottom:0.15rem;">KİLOMETRE</div>
+                        <span class="fs-5 fw-bold">@Model.AracKM.ToString("N0") km</span>
                     </div>
                 </div>
             </div>
@@ -47,19 +50,19 @@
         <!-- Yapılan İşlem -->
         <div class="card mb-4">
             <div class="card-header">
-                <i class="bi bi-wrench me-1"></i>Yapılan İşlem
+                <i class="bi bi-wrench text-ecu me-1"></i>Yapılan İşlem
             </div>
             <div class="card-body">
-                <p class="mb-0" style="white-space: pre-wrap;">@Model.YapilanIslem</p>
+                <p class="mb-0" style="white-space: pre-wrap; line-height:1.7;">@Model.YapilanIslem</p>
             </div>
-            <div class="card-footer text-muted small">
+            <div class="card-footer" style="font-size:0.8rem;">
                 Ekleyen: <strong>@Model.EkleyenKullanici.Ad @Model.EkleyenKullanici.Soyad</strong>
-                &mdash; @Model.EklenmeTarihi.ToString("dd.MM.yyyy HH:mm")
+                — @Model.EklenmeTarihi.ToString("dd.MM.yyyy HH:mm")
                 @if (Model.GuncelleyenKullanici != null)
                 {
                     <br />
                     <text>Güncelleyen: <strong>@Model.GuncelleyenKullanici.Ad @Model.GuncelleyenKullanici.Soyad</strong>
-                    &mdash; @Model.GuncellemeTarihi?.ToString("dd.MM.yyyy HH:mm")</text>
+                    — @Model.GuncellemeTarihi?.ToString("dd.MM.yyyy HH:mm")</text>
                 }
             </div>
         </div>
@@ -69,7 +72,8 @@
         {
             <div class="card mb-4">
                 <div class="card-header">
-                    <i class="bi bi-camera me-1"></i>Fotoğraflar (@Model.Fotograflar.Count)
+                    <i class="bi bi-camera text-ecu me-1"></i>Fotoğraflar
+                    <span class="badge badge-ecu ms-2">@Model.Fotograflar.Count</span>
                 </div>
                 <div class="card-body">
                     <div class="d-flex flex-wrap gap-3">
@@ -77,8 +81,7 @@
                         {
                             <a href="@foto.DosyaYolu" class="glightbox" data-gallery="islem-galeri">
                                 <img src="@foto.DosyaYolu" alt="@foto.OrijinalAd"
-                                     style="width:150px;height:150px;object-fit:cover;border-radius:8px;border:2px solid #dee2e6;cursor:pointer;"
-                                     loading="lazy" />
+                                     class="foto-thumb" loading="lazy" />
                             </a>
                         }
                     </div>
@@ -91,11 +94,11 @@
         {
             <div class="card">
                 <div class="card-header">
-                    <i class="bi bi-clock-history me-1"></i>İşlem Geçmişi
+                    <i class="bi bi-clock-history text-ecu me-1"></i>İşlem Geçmişi
                 </div>
                 <div class="card-body p-0">
                     <table class="table table-sm mb-0">
-                        <thead class="table-light">
+                        <thead class="ecu-thead">
                             <tr>
                                 <th>Aksiyon</th>
                                 <th>Kullanıcı</th>
@@ -114,7 +117,7 @@
                                     </td>
                                     <td>@log.Kullanici.Ad @log.Kullanici.Soyad</td>
                                     <td>@log.LogTarihi.ToString("dd.MM.yyyy HH:mm:ss")</td>
-                                    <td><small class="text-muted">@log.IPAdresi</small></td>
+                                    <td><small style="color:var(--text-muted);">@log.IPAdresi</small></td>
                                 </tr>
                             }
                         </tbody>

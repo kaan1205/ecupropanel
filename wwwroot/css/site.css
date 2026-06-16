@@ -1,32 +1,553 @@
+/* ============================================
+   EcuPro Panel — Brand Design System
+   ============================================ */
+
+:root {
+    /* EcuPro Brand Colors */
+    --ecu-red: #E52D27;
+    --ecu-red-hover: #C41E1A;
+    --ecu-red-glow: rgba(229, 45, 39, 0.3);
+    --ecu-orange: #FF6B35;
+    --ecu-gold: #F0A500;
+
+    /* Light Theme (default) */
+    --bg-primary: #F4F6F9;
+    --bg-secondary: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-navbar: #1A1A2E;
+    --bg-sidebar: #16213E;
+    --bg-input: #FFFFFF;
+    --bg-table-head: #1A1A2E;
+    --bg-table-stripe: #F8F9FA;
+    --bg-card-header: #F8F9FA;
+    --bg-badge: #E8E8E8;
+
+    --text-primary: #1A1A2E;
+    --text-secondary: #6C757D;
+    --text-muted: #8E99A4;
+    --text-on-dark: #FFFFFF;
+    --text-on-card: #2D3436;
+    --text-link: #E52D27;
+
+    --border-color: #DEE2E6;
+    --border-card: #E8ECF1;
+    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
+    --shadow-card-hover: 0 8px 25px rgba(0, 0, 0, 0.12);
+    --shadow-navbar: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+    --transition-speed: 0.3s;
+}
+
+/* ============================================
+   Dark Theme
+   ============================================ */
+[data-theme="dark"] {
+    --bg-primary: #0F0F1A;
+    --bg-secondary: #1A1A2E;
+    --bg-card: #1E1E32;
+    --bg-navbar: #0A0A14;
+    --bg-input: #252540;
+    --bg-table-head: #0A0A14;
+    --bg-table-stripe: #16162A;
+    --bg-card-header: #252540;
+    --bg-badge: #2A2A44;
+
+    --text-primary: #E8E8E8;
+    --text-secondary: #A0A0B8;
+    --text-muted: #6C6C88;
+    --text-on-card: #D4D4E8;
+    --text-link: #FF6B6B;
+
+    --border-color: #2A2A44;
+    --border-card: #2D2D48;
+    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.3);
+    --shadow-card-hover: 0 8px 25px rgba(0, 0, 0, 0.5);
+    --shadow-navbar: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================
+   Base
+   ============================================ */
+* {
+    transition: background-color var(--transition-speed) ease,
+                color var(--transition-speed) ease,
+                border-color var(--transition-speed) ease,
+                box-shadow var(--transition-speed) ease;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f9fa;
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
 }
 
-.navbar-brand {
-    font-size: 1.25rem;
+a {
+    color: var(--text-link);
+    text-decoration: none;
 }
 
+a:hover {
+    color: var(--ecu-red-hover);
+}
+
+/* ============================================
+   Navbar
+   ============================================ */
+.ecu-navbar {
+    background: linear-gradient(135deg, #0A0A14 0%, #1A1A2E 100%);
+    box-shadow: var(--shadow-navbar);
+    padding: 0.6rem 0;
+    border-bottom: 2px solid var(--ecu-red);
+}
+
+.ecu-navbar .navbar-brand {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #FFFFFF !important;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.ecu-navbar .navbar-brand .brand-ecu {
+    color: #FFFFFF;
+}
+
+.ecu-navbar .navbar-brand .brand-pro {
+    color: var(--ecu-red);
+}
+
+.ecu-navbar .navbar-brand .brand-panel {
+    color: var(--text-muted);
+    font-weight: 400;
+    font-size: 0.85rem;
+    margin-left: 0.25rem;
+}
+
+.ecu-navbar .nav-link {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem !important;
+    border-radius: 8px;
+    margin: 0 2px;
+}
+
+.ecu-navbar .nav-link:hover,
+.ecu-navbar .nav-link.active {
+    color: #FFFFFF !important;
+    background: rgba(229, 45, 39, 0.15);
+}
+
+.ecu-navbar .nav-link i {
+    font-size: 1rem;
+}
+
+/* ============================================
+   Theme Toggle
+   ============================================ */
+.theme-toggle {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+.theme-toggle:hover {
+    background: rgba(229, 45, 39, 0.3);
+    border-color: var(--ecu-red);
+    color: #FFFFFF;
+}
+
+/* ============================================
+   Cards
+   ============================================ */
 .card {
-    border: none;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 12px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-card-hover);
 }
 
 .card-header {
-    background-color: #f8f9fa;
+    background: var(--bg-card-header);
+    border-bottom: 1px solid var(--border-card);
     font-weight: 600;
+    color: var(--text-primary);
+    padding: 0.85rem 1.25rem;
 }
 
-.table th {
+.card-header.ecu-header {
+    background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+    color: #FFFFFF;
+    border-bottom: 2px solid var(--ecu-red);
+}
+
+.card-body {
+    color: var(--text-on-card);
+    padding: 1.25rem;
+}
+
+.card-footer {
+    background: var(--bg-card-header);
+    border-top: 1px solid var(--border-card);
+    color: var(--text-secondary);
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+.btn-ecu {
+    background: linear-gradient(135deg, var(--ecu-red) 0%, #C41E1A 100%);
+    color: #FFFFFF;
+    border: none;
+    font-weight: 600;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px var(--ecu-red-glow);
+}
+
+.btn-ecu:hover {
+    background: linear-gradient(135deg, #C41E1A 0%, #A01815 100%);
+    color: #FFFFFF;
+    box-shadow: 0 4px 16px var(--ecu-red-glow);
+    transform: translateY(-1px);
+}
+
+.btn-outline-ecu {
+    color: var(--ecu-red);
+    border: 2px solid var(--ecu-red);
+    background: transparent;
+    font-weight: 600;
+    padding: 0.45rem 1.2rem;
+    border-radius: 8px;
+}
+
+.btn-outline-ecu:hover {
+    background: var(--ecu-red);
+    color: #FFFFFF;
+    box-shadow: 0 4px 16px var(--ecu-red-glow);
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* ============================================
+   Forms
+   ============================================ */
+.form-control,
+.form-select {
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 0.55rem 0.85rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background: var(--bg-input);
+    color: var(--text-primary);
+    border-color: var(--ecu-red);
+    box-shadow: 0 0 0 3px var(--ecu-red-glow);
+}
+
+.form-control::placeholder {
+    color: var(--text-muted);
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.35rem;
+}
+
+.form-check-input:checked {
+    background-color: var(--ecu-red);
+    border-color: var(--ecu-red);
+}
+
+/* ============================================
+   Tables
+   ============================================ */
+.table {
+    color: var(--text-primary);
+    --bs-table-bg: transparent;
+}
+
+.table thead.ecu-thead {
+    background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+}
+
+.table thead.ecu-thead th {
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.85rem 1rem;
+    border: none;
     white-space: nowrap;
 }
 
+.table tbody td {
+    padding: 0.85rem 1rem;
+    vertical-align: middle;
+    border-color: var(--border-card);
+}
+
+.table-hover tbody tr:hover {
+    background: var(--bg-table-stripe);
+    --bs-table-hover-bg: var(--bg-table-stripe);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    --bs-table-striped-bg: var(--bg-table-stripe);
+}
+
+/* ============================================
+   Badges
+   ============================================ */
 .badge {
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 0.4em 0.7em;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+}
+
+.badge-ecu {
+    background: linear-gradient(135deg, var(--ecu-red), var(--ecu-orange));
+    color: #FFFFFF;
+}
+
+/* ============================================
+   Alerts
+   ============================================ */
+.alert {
+    border-radius: 10px;
+    border: none;
     font-weight: 500;
 }
 
-.text-uppercase {
+.alert-success {
+    background: rgba(40, 167, 69, 0.15);
+    color: #28a745;
+    border-left: 4px solid #28a745;
+}
+
+.alert-danger {
+    background: rgba(229, 45, 39, 0.12);
+    color: var(--ecu-red);
+    border-left: 4px solid var(--ecu-red);
+}
+
+.alert-info {
+    background: rgba(23, 162, 184, 0.12);
+    color: #17a2b8;
+    border-left: 4px solid #17a2b8;
+}
+
+[data-theme="dark"] .alert-success {
+    color: #5BDA76;
+}
+[data-theme="dark"] .alert-danger {
+    color: #FF6B6B;
+}
+[data-theme="dark"] .alert-info {
+    color: #5DC8DA;
+}
+
+/* ============================================
+   Login / Register Cards
+   ============================================ */
+.auth-card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+}
+
+.auth-card .card-body {
+    padding: 2.5rem;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-header .logo-text {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.auth-header .logo-text .brand-ecu { color: var(--text-primary); }
+.auth-header .logo-text .brand-pro { color: var(--ecu-red); }
+
+.auth-header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+[data-theme="dark"] .auth-card {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-card);
+}
+
+/* ============================================
+   Stat Cards (Dashboard Feel)
+   ============================================ */
+.stat-strip {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-item {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: var(--shadow-card);
+}
+
+.stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #FFFFFF;
+    flex-shrink: 0;
+}
+
+.stat-icon.red { background: linear-gradient(135deg, var(--ecu-red), var(--ecu-orange)); }
+.stat-icon.blue { background: linear-gradient(135deg, #4A90D9, #357ABD); }
+.stat-icon.green { background: linear-gradient(135deg, #28a745, #20893A); }
+.stat-icon.gold { background: linear-gradient(135deg, var(--ecu-gold), #D4900C); }
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================
+   Filter Panel
+   ============================================ */
+.filter-panel .card-header {
+    cursor: pointer;
+    user-select: none;
+}
+
+.filter-panel .card-header:hover {
+    background: var(--bg-table-stripe);
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+.ecu-footer {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-card);
+    color: var(--text-muted);
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+}
+
+.ecu-footer .brand-pro {
+    color: var(--ecu-red);
+    font-weight: 700;
+}
+
+/* ============================================
+   Photo Gallery
+   ============================================ */
+.foto-thumb {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid var(--border-card);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.foto-thumb:hover {
+    border-color: var(--ecu-red);
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px var(--ecu-red-glow);
+}
+
+/* ============================================
+   Misc
+   ============================================ */
+.text-ecu {
+    color: var(--ecu-red) !important;
+}
+
+.plaka-badge {
+    background: var(--bg-badge);
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.35em 0.75em;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+    font-family: 'Courier New', monospace;
+}
+
+[data-theme="dark"] .plaka-badge {
+    background: #2A2A44;
+}
+
+.page-title {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.page-title i {
+    color: var(--ecu-red);
 }
 
 input.text-uppercase {
@@ -35,4 +556,21 @@ input.text-uppercase {
 
 input.text-uppercase::placeholder {
     text-transform: none;
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 768px) {
+    .stat-strip {
+        flex-direction: column;
+    }
+
+    .auth-card .card-body {
+        padding: 1.5rem;
+    }
+
+    .ecu-navbar .navbar-brand {
+        font-size: 1.1rem;
+    }
 }

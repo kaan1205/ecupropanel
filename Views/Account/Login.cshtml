@@ -4,47 +4,70 @@
     Layout = "_Layout";
 }
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-5">
-        <div class="card shadow">
-            <div class="card-body p-4">
-                <h3 class="text-center mb-4">
-                    <i class="bi bi-car-front-fill text-primary me-2"></i>Giriş Yap
-                </h3>
+<div class="row justify-content-center" style="margin-top: 8vh;">
+    <div class="col-md-5 col-lg-4">
+        <div class="card auth-card">
+            <div class="card-body">
+                <div class="auth-header">
+                    <div class="logo-text">
+                        <i class="bi bi-cpu-fill text-ecu"></i>
+                        <span class="brand-ecu">Ecu</span><span class="brand-pro">Pro</span>
+                    </div>
+                    <p>Panele giriş yapın</p>
+                </div>
 
                 <form asp-action="Login" method="post">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
 
-                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                    <div asp-validation-summary="All" class="text-danger mb-3" style="font-size:0.85rem;"></div>
 
                     <div class="mb-3">
-                        <label asp-for="Email" class="form-label">Email</label>
+                        <label asp-for="Email" class="form-label">EMAIL</label>
                         <input asp-for="Email" class="form-control" placeholder="ornek@email.com" autofocus />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <span asp-validation-for="Email" class="text-danger" style="font-size:0.8rem;"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Sifre" class="form-label">Şifre</label>
+                        <label asp-for="Sifre" class="form-label">ŞİFRE</label>
                         <input asp-for="Sifre" class="form-control" placeholder="••••••" />
-                        <span asp-validation-for="Sifre" class="text-danger"></span>
+                        <span asp-validation-for="Sifre" class="text-danger" style="font-size:0.8rem;"></span>
                     </div>
 
                     <div class="mb-3 form-check">
                         <input asp-for="BeniHatirla" class="form-check-input" />
-                        <label asp-for="BeniHatirla" class="form-check-label">Beni hatırla</label>
+                        <label asp-for="BeniHatirla" class="form-check-label" style="font-size:0.85rem;">Beni hatırla</label>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 mb-3">
+                    <button type="submit" class="btn btn-ecu w-100 mb-3 py-2">
                         <i class="bi bi-box-arrow-in-right me-1"></i>Giriş Yap
                     </button>
 
-                    <p class="text-center mb-0">
+                    <p class="text-center mb-0" style="font-size:0.85rem; color: var(--text-muted);">
                         Hesabınız yok mu?
-                        <a asp-action="Register">Kayıt Ol</a>
+                        <a asp-action="Register" class="fw-600">Kayıt Ol</a>
                     </p>
                 </form>
             </div>
         </div>
+
+        <div class="text-center mt-3">
+            <button class="btn btn-sm" id="authThemeToggle"
+                    style="color: var(--text-muted); font-size:0.8rem;">
+                <i class="bi bi-circle-half me-1"></i>Tema Değiştir
+            </button>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+<script>
+    document.getElementById('authThemeToggle')?.addEventListener('click', function() {
+        const html = document.documentElement;
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('ecupro-theme', next);
+    });
+</script>
+}
