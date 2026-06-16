@@ -47,12 +47,13 @@
                         </li>
                     </ul>
                     <div class="d-flex align-items-center gap-3">
-                        <button class="theme-toggle" id="themeToggle" title="Tema Değiştir">
-                            <i class="bi bi-moon-fill" id="themeIcon"></i>
-                        </button>
                         <span class="text-light d-none d-md-inline" style="font-size:0.85rem;">
                             <i class="bi bi-person-circle me-1"></i>@User.GetTamAd()
                         </span>
+                        <button class="theme-toggle" id="themeToggle" title="Tema Değiştir" type="button">
+                            <i class="bi bi-moon-fill" id="themeIcon"></i>
+                            <span class="d-none d-md-inline ms-1" id="themeLabel" style="font-size:0.75rem;">Gece</span>
+                        </button>
                         <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
                             @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-outline-ecu btn-sm"
@@ -112,7 +113,14 @@
 
             function updateIcon(theme) {
                 if (!icon) return;
-                icon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-fill';
+                var label = document.getElementById('themeLabel');
+                if (theme === 'dark') {
+                    icon.className = 'bi bi-sun-fill';
+                    if (label) label.textContent = 'Gündüz';
+                } else {
+                    icon.className = 'bi bi-moon-fill';
+                    if (label) label.textContent = 'Gece';
+                }
             }
         })();
     </script>
