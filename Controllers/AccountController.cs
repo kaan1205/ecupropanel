@@ -98,6 +98,10 @@ public class AccountController : Controller
         await _userManager.AddClaimAsync(kullanici, new Claim("Ad", kullanici.Ad));
         await _userManager.AddClaimAsync(kullanici, new Claim("Soyad", kullanici.Soyad));
 
+        var toplamKullanici = _userManager.Users.Count();
+        var rol = toplamKullanici == 1 ? "Admin" : "Kullanici";
+        await _userManager.AddToRoleAsync(kullanici, rol);
+
         await _signInManager.SignInAsync(kullanici, isPersistent: false);
         await _logService.LogEkle("KAYIT");
 

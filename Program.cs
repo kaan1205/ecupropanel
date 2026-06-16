@@ -36,7 +36,7 @@ builder.Services.AddIdentity<Kullanici, IdentityRole<int>>(options =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
-    options.AccessDeniedPath = "/Account/Login";
+    options.AccessDeniedPath = "/Islem";
     options.ExpireTimeSpan = TimeSpan.FromHours(8);
     options.SlidingExpiration = true;
 });
@@ -51,11 +51,24 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// DB'yi otomatik oluştur (migration)
+// DB'yi otomatik oluştur (migration) + Admin rolü seed
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
+
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Kullanici>>();
+
+    if (!await roleManager.RoleExistsAsync("Admin"))
+        await roleManager.CreateAsync(new IdentityRole<int> { Name = "Admin" });
+
+    if (!await roleManager.RoleExistsAsync("Kullanici"))
+        await roleManager.CreateAsync(new IdentityRole<int> { Name = "Kullanici" });
+
+    var ilkKullanici = await userManager.Users.OrderBy(u => u.Id).FirstOrDefaultAsync();
+    if (ilkKullanici != null && !await userManager.IsInRoleAsync(ilkKullanici, "Admin"))
+        await userManager.AddToRoleAsync(ilkKullanici, "Admin");
 }
 
 if (!app.Environment.IsDevelopment())
