@@ -36,7 +36,7 @@ builder.Services.AddIdentity<Kullanici, IdentityRole<int>>(options =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
-    options.AccessDeniedPath = "/Islem";
+    options.AccessDeniedPath = "/Account/Beklemede";
     options.ExpireTimeSpan = TimeSpan.FromHours(8);
     options.SlidingExpiration = true;
 });

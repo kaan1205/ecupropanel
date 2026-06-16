@@ -5,7 +5,7 @@ using AraPanelWeb.Data;
 
 namespace AraPanelWeb.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Admin")]
 public class LogController : Controller
 {
     private readonly AppDbContext _db;

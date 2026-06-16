@@ -6,7 +6,7 @@ using AraPanelWeb.Services;
 
 namespace AraPanelWeb.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Admin")]
 public class IslemController : Controller
 {
     private readonly IslemService _islemService;

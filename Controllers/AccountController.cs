@@ -60,7 +60,10 @@ public class AccountController : Controller
         if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             return Redirect(returnUrl);
 
-        return RedirectToAction("Index", "Islem");
+        if (await _userManager.IsInRoleAsync(kullanici, "Admin"))
+            return RedirectToAction("Index", "Islem");
+
+        return RedirectToAction("Beklemede");
     }
 
     [HttpGet]
@@ -105,8 +108,23 @@ public class AccountController : Controller
         await _signInManager.SignInAsync(kullanici, isPersistent: false);
         await _logService.LogEkle("KAYIT");
 
-        TempData["Basari"] = "Kayıt başarılı! Hoş geldiniz.";
-        return RedirectToAction("Index", "Islem");
+        if (rol == "Admin")
+        {
+            TempData["Basari"] = "Kayıt başarılı! Hoş geldiniz.";
+            return RedirectToAction("Index", "Islem");
+        }
+
+        return RedirectToAction("Beklemede");
+    }
+
+    [Authorize]
+    [HttpGet]
+    public IActionResult Beklemede()
+    {
+        if (User.IsInRole("Admin"))
+            return RedirectToAction("Index", "Islem");
+
+        return View();
     }
 
     [HttpPost]
