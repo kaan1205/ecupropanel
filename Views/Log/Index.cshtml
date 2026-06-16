@@ -1,0 +1,128 @@
+@model List<IslemLog>
+@{
+    ViewData["Title"] = "Sistem Logları";
+}
+
+<h2 class="mb-4"><i class="bi bi-clock-history me-2"></i>Sistem Logları</h2>
+
+<!-- Filtreler -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">Aksiyon</label>
+                <select name="aksiyon" class="form-select">
+                    <option value="">-- Tümü --</option>
+                    @foreach (var a in (string[])ViewBag.Aksiyonlar)
+                    {
+                        <option value="@a" selected="@(Context.Request.Query["aksiyon"] == a)">@a</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Kullanıcı</label>
+                <select name="kullaniciId" class="form-select">
+                    <option value="">-- Tümü --</option>
+                    @foreach (dynamic k in (dynamic)ViewBag.Kullanicilar)
+                    {
+                        <option value="@k.Id">@k.TamAd</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Başlangıç</label>
+                <input type="date" name="baslangic" class="form-control" value="@Context.Request.Query["baslangic"]" />
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Bitiş</label>
+                <input type="date" name="bitis" class="form-control" value="@Context.Request.Query["bitis"]" />
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search me-1"></i>Filtrele
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>Log kaydı bulunamadı.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover table-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Tarih</th>
+                    <th>Aksiyon</th>
+                    <th>Kullanıcı</th>
+                    <th>İşlem ID</th>
+                    <th>IP Adresi</th>
+                    <th>Detay</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var log in Model)
+                {
+                    <tr>
+                        <td>@log.LogTarihi.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                        <td>
+                            <span class="badge @GetBadge(log.Aksiyon)">@log.Aksiyon</span>
+                        </td>
+                        <td>@log.Kullanici.Ad @log.Kullanici.Soyad</td>
+                        <td>
+                            @if (log.IslemId.HasValue && log.Islem != null)
+                            {
+                                <a asp-controller="Islem" asp-action="Detay" asp-route-id="@log.IslemId">
+                                    #@log.IslemId - @log.Islem.AracPlaka
+                                </a>
+                            }
+                            else if (log.IslemId.HasValue)
+                            {
+                                <span class="text-muted">#@log.IslemId (silinmiş)</span>
+                            }
+                        </td>
+                        <td><small class="text-muted">@log.IPAdresi</small></td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(log.DetayJson))
+                            {
+                                <button class="btn btn-sm btn-outline-info" data-bs-toggle="popover"
+                                        data-bs-content="@log.DetayJson" data-bs-trigger="focus">
+                                    <i class="bi bi-code-square"></i>
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <p class="text-muted">Son <strong>@Model.Count</strong> kayıt gösteriliyor (max 500)</p>
+}
+
+@section Scripts {
+<script>
+    document.querySelectorAll('[data-bs-toggle="popover"]').forEach(el => {
+        new bootstrap.Popover(el);
+    });
+</script>
+}
+
+@functions {
+    string GetBadge(string aksiyon) => aksiyon switch
+    {
+        "GIRIS" => "bg-primary",
+        "CIKIS" => "bg-secondary",
+        "KAYIT" => "bg-info",
+        "EKLE" => "bg-success",
+        "GUNCELLE" => "bg-warning text-dark",
+        "SIL" => "bg-danger",
+        "GORUNTULE" => "bg-info",
+        _ => "bg-secondary"
+    };
+}

@@ -1,0 +1,85 @@
+@model IslemEkleVM
+@{
+    ViewData["Title"] = "Yeni İşlem Ekle";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4"><i class="bi bi-plus-circle me-2"></i>Yeni İşlem Ekle</h2>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form asp-action="Ekle" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="AracPlaka" class="form-label">Araç Plaka <span class="text-danger">*</span></label>
+                            <input asp-for="AracPlaka" class="form-control text-uppercase" placeholder="34 ABC 1234" autofocus />
+                            <span asp-validation-for="AracPlaka" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="AracSahibi" class="form-label">Araç Sahibi <span class="text-danger">*</span></label>
+                            <input asp-for="AracSahibi" class="form-control" />
+                            <span asp-validation-for="AracSahibi" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="AracKM" class="form-label">Kilometre <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input asp-for="AracKM" type="number" class="form-control" min="0" max="9999999" />
+                            <span class="input-group-text">km</span>
+                        </div>
+                        <span asp-validation-for="AracKM" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="YapilanIslem" class="form-label">Yapılan İşlem <span class="text-danger">*</span></label>
+                        <textarea asp-for="YapilanIslem" class="form-control" rows="4"
+                                  placeholder="Motor yağı değişimi, filtre yenileme..."></textarea>
+                        <span asp-validation-for="YapilanIslem" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Fotograflar" class="form-label">Fotoğraflar</label>
+                        <input asp-for="Fotograflar" type="file" class="form-control" multiple
+                               accept=".jpg,.jpeg,.png,.webp" />
+                        <div class="form-text">JPG, PNG veya WebP. Maksimum 5 MB / dosya.</div>
+                        <div id="fotoOnizleme" class="d-flex flex-wrap gap-2 mt-2"></div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>Kaydet
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>İptal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    document.querySelector('input[type="file"]').addEventListener('change', function(e) {
+        const container = document.getElementById('fotoOnizleme');
+        container.innerHTML = '';
+        for (const file of e.target.files) {
+            if (!file.type.startsWith('image/')) continue;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const img = document.createElement('img');
+                img.src = ev.target.result;
+                img.style.cssText = 'width:100px;height:100px;object-fit:cover;border-radius:8px;border:2px solid #dee2e6;';
+                container.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+}

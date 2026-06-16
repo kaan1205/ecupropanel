@@ -1,0 +1,63 @@
+@model RegisterVM
+@{
+    ViewData["Title"] = "Kayıt Ol";
+    Layout = "_Layout";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="text-center mb-4">
+                    <i class="bi bi-person-plus-fill text-primary me-2"></i>Kayıt Ol
+                </h3>
+
+                <form asp-action="Register" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Ad" class="form-label">Ad</label>
+                            <input asp-for="Ad" class="form-control" autofocus />
+                            <span asp-validation-for="Ad" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Soyad" class="form-label">Soyad</label>
+                            <input asp-for="Soyad" class="form-control" />
+                            <span asp-validation-for="Soyad" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <input asp-for="Email" class="form-control" placeholder="ornek@email.com" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Sifre" class="form-label">Şifre</label>
+                        <input asp-for="Sifre" class="form-control" placeholder="En az 6 karakter" />
+                        <span asp-validation-for="Sifre" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="SifreTekrar" class="form-label">Şifre Tekrar</label>
+                        <input asp-for="SifreTekrar" class="form-control" />
+                        <span asp-validation-for="SifreTekrar" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 mb-3">
+                        <i class="bi bi-person-check me-1"></i>Kayıt Ol
+                    </button>
+
+                    <p class="text-center mb-0">
+                        Zaten hesabınız var mı?
+                        <a asp-action="Login">Giriş Yap</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

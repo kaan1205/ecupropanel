@@ -1,0 +1,143 @@
+@model Islem
+@{
+    ViewData["Title"] = $"İşlem Detay - {Model.AracPlaka}";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-car-front me-2"></i>@Model.AracPlaka</h2>
+            <div class="d-flex gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Listeye Dön
+                </a>
+                <form asp-action="Sil" asp-route-id="@Model.Id" method="post"
+                      onsubmit="return confirm('Bu işlemi silmek istediğinize emin misiniz?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-danger">
+                        <i class="bi bi-trash me-1"></i>Sil
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Araç Bilgileri -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="bi bi-info-circle me-1"></i>Araç Bilgileri
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <strong class="text-muted d-block">Plaka</strong>
+                        <span class="fs-5">@Model.AracPlaka</span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <strong class="text-muted d-block">Araç Sahibi</strong>
+                        <span class="fs-5">@Model.AracSahibi</span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <strong class="text-muted d-block">Kilometre</strong>
+                        <span class="fs-5">@Model.AracKM.ToString("N0") km</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yapılan İşlem -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="bi bi-wrench me-1"></i>Yapılan İşlem
+            </div>
+            <div class="card-body">
+                <p class="mb-0" style="white-space: pre-wrap;">@Model.YapilanIslem</p>
+            </div>
+            <div class="card-footer text-muted small">
+                Ekleyen: <strong>@Model.EkleyenKullanici.Ad @Model.EkleyenKullanici.Soyad</strong>
+                &mdash; @Model.EklenmeTarihi.ToString("dd.MM.yyyy HH:mm")
+                @if (Model.GuncelleyenKullanici != null)
+                {
+                    <br />
+                    <text>Güncelleyen: <strong>@Model.GuncelleyenKullanici.Ad @Model.GuncelleyenKullanici.Soyad</strong>
+                    &mdash; @Model.GuncellemeTarihi?.ToString("dd.MM.yyyy HH:mm")</text>
+                }
+            </div>
+        </div>
+
+        <!-- Fotoğraflar -->
+        @if (Model.Fotograflar.Count > 0)
+        {
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="bi bi-camera me-1"></i>Fotoğraflar (@Model.Fotograflar.Count)
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-3">
+                        @foreach (var foto in Model.Fotograflar)
+                        {
+                            <a href="@foto.DosyaYolu" class="glightbox" data-gallery="islem-galeri">
+                                <img src="@foto.DosyaYolu" alt="@foto.OrijinalAd"
+                                     style="width:150px;height:150px;object-fit:cover;border-radius:8px;border:2px solid #dee2e6;cursor:pointer;"
+                                     loading="lazy" />
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- İşlem Logları -->
+        @if (Model.Loglar.Count > 0)
+        {
+            <div class="card">
+                <div class="card-header">
+                    <i class="bi bi-clock-history me-1"></i>İşlem Geçmişi
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Aksiyon</th>
+                                <th>Kullanıcı</th>
+                                <th>Tarih</th>
+                                <th>IP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var log in Model.Loglar.OrderByDescending(l => l.LogTarihi))
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="badge @GetAksiyonBadgeClass(log.Aksiyon)">
+                                            @log.Aksiyon
+                                        </span>
+                                    </td>
+                                    <td>@log.Kullanici.Ad @log.Kullanici.Soyad</td>
+                                    <td>@log.LogTarihi.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                                    <td><small class="text-muted">@log.IPAdresi</small></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const lightbox = GLightbox({ selector: '.glightbox' });
+</script>
+}
+
+@functions {
+    string GetAksiyonBadgeClass(string aksiyon) => aksiyon switch
+    {
+        "EKLE" => "bg-success",
+        "GUNCELLE" => "bg-warning text-dark",
+        "SIL" => "bg-danger",
+        "GORUNTULE" => "bg-info",
+        _ => "bg-secondary"
+    };
+}
