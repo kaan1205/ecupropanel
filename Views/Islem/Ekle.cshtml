@@ -47,15 +47,20 @@
 
                     <div class="mb-4">
                         <label class="form-label">FOTOĞRAFLAR</label>
-                        <input id="fotoInput" name="Fotograflar" type="file" class="form-control" multiple
-                               accept=".jpg,.jpeg,.png,.webp" capture="environment" />
-                        <div class="form-text" style="color:var(--text-muted);">JPG, PNG veya WebP. Maksimum 5 MB / dosya.</div>
+                        <input id="fotoInput" name="Fotograflar" type="file" style="display:none;" multiple
+                               accept=".jpg,.jpeg,.png,.webp" />
+                        <input id="fotoInputKamera" type="file" style="display:none;"
+                               accept="image/*" capture="environment" />
+                        <div class="d-flex gap-2">
+                            <button type="button" id="btnFotoSec" class="btn btn-outline-ecu">
+                                <i class="bi bi-images me-1"></i>Fotoğraf Seç
+                            </button>
+                            <button type="button" id="btnFotoCek" class="btn btn-outline-ecu">
+                                <i class="bi bi-camera me-1"></i>Fotoğraf Çek
+                            </button>
+                        </div>
+                        <div class="form-text mt-1" style="color:var(--text-muted);">JPG, PNG veya WebP. Maksimum 5 MB / dosya.</div>
                         <div id="fotoOnizleme" class="d-flex flex-wrap gap-2 mt-2"></div>
-                        <button type="button" id="btnFotoEkle" class="btn btn-outline-ecu btn-sm mt-2" style="display:none;">
-                            <i class="bi bi-plus-circle me-1"></i>Daha Fazla Fotoğraf Ekle
-                        </button>
-                        <input type="file" id="fotoInputGizli" style="display:none;"
-                               accept=".jpg,.jpeg,.png,.webp" capture="environment" />
                     </div>
 
                     <div class="d-flex gap-2">
@@ -77,8 +82,9 @@
     (function() {
         const container = document.getElementById('fotoOnizleme');
         const fotoInput = document.getElementById('fotoInput');
-        const fotoInputGizli = document.getElementById('fotoInputGizli');
-        const btnFotoEkle = document.getElementById('btnFotoEkle');
+        const fotoInputKamera = document.getElementById('fotoInputKamera');
+        const btnFotoSec = document.getElementById('btnFotoSec');
+        const btnFotoCek = document.getElementById('btnFotoCek');
         const birikimliFotolar = [];
 
         function renderOnizleme() {
@@ -113,7 +119,6 @@
                 reader.readAsDataURL(file);
                 container.appendChild(wrapper);
             });
-            btnFotoEkle.style.display = birikimliFotolar.length > 0 ? 'inline-block' : 'none';
         }
 
         function guncelleFormInput() {
@@ -131,17 +136,21 @@
             renderOnizleme();
         }
 
+        btnFotoSec.addEventListener('click', function() {
+            fotoInput.click();
+        });
+
+        btnFotoCek.addEventListener('click', function() {
+            fotoInputKamera.click();
+        });
+
         fotoInput.addEventListener('change', function(e) {
             dosyaEkle(e.target.files);
         });
 
-        fotoInputGizli.addEventListener('change', function(e) {
+        fotoInputKamera.addEventListener('change', function(e) {
             dosyaEkle(e.target.files);
-            fotoInputGizli.value = '';
-        });
-
-        btnFotoEkle.addEventListener('click', function() {
-            fotoInputGizli.click();
+            fotoInputKamera.value = '';
         });
     })();
 </script>
