@@ -46,11 +46,16 @@
                     </div>
 
                     <div class="mb-4">
-                        <label asp-for="Fotograflar" class="form-label">FOTOĞRAFLAR</label>
-                        <input asp-for="Fotograflar" type="file" class="form-control" multiple
-                               accept=".jpg,.jpeg,.png,.webp" />
+                        <label class="form-label">FOTOĞRAFLAR</label>
+                        <input id="fotoInput" name="Fotograflar" type="file" class="form-control" multiple
+                               accept=".jpg,.jpeg,.png,.webp" capture="environment" />
                         <div class="form-text" style="color:var(--text-muted);">JPG, PNG veya WebP. Maksimum 5 MB / dosya.</div>
                         <div id="fotoOnizleme" class="d-flex flex-wrap gap-2 mt-2"></div>
+                        <button type="button" id="btnFotoEkle" class="btn btn-outline-ecu btn-sm mt-2" style="display:none;">
+                            <i class="bi bi-plus-circle me-1"></i>Daha Fazla Fotoğraf Ekle
+                        </button>
+                        <input type="file" id="fotoInputGizli" style="display:none;"
+                               accept=".jpg,.jpeg,.png,.webp" capture="environment" />
                     </div>
 
                     <div class="d-flex gap-2">
@@ -69,22 +74,75 @@
 
 @section Scripts {
 <script>
-    document.querySelector('input[type="file"]').addEventListener('change', function(e) {
+    (function() {
         const container = document.getElementById('fotoOnizleme');
-        container.innerHTML = '';
-        for (const file of e.target.files) {
-            if (!file.type.startsWith('image/')) continue;
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                const img = document.createElement('img');
-                img.src = ev.target.result;
-                img.className = 'foto-thumb';
-                img.style.width = '100px';
-                img.style.height = '100px';
-                container.appendChild(img);
-            };
-            reader.readAsDataURL(file);
+        const fotoInput = document.getElementById('fotoInput');
+        const fotoInputGizli = document.getElementById('fotoInputGizli');
+        const btnFotoEkle = document.getElementById('btnFotoEkle');
+        const birikimliFotolar = [];
+
+        function renderOnizleme() {
+            container.innerHTML = '';
+            birikimliFotolar.forEach(function(file, index) {
+                const wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+                wrapper.style.display = 'inline-block';
+
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const img = document.createElement('img');
+                    img.src = ev.target.result;
+                    img.className = 'foto-thumb';
+                    img.style.width = '100px';
+                    img.style.height = '100px';
+                    img.style.objectFit = 'cover';
+                    img.style.borderRadius = '8px';
+                    wrapper.appendChild(img);
+
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.innerHTML = '&times;';
+                    btn.style.cssText = 'position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.7);color:white;border:none;border-radius:50%;width:22px;height:22px;font-size:14px;line-height:1;cursor:pointer;';
+                    btn.onclick = function() {
+                        birikimliFotolar.splice(index, 1);
+                        guncelleFormInput();
+                        renderOnizleme();
+                    };
+                    wrapper.appendChild(btn);
+                };
+                reader.readAsDataURL(file);
+                container.appendChild(wrapper);
+            });
+            btnFotoEkle.style.display = birikimliFotolar.length > 0 ? 'inline-block' : 'none';
         }
-    });
+
+        function guncelleFormInput() {
+            const dt = new DataTransfer();
+            birikimliFotolar.forEach(function(f) { dt.items.add(f); });
+            fotoInput.files = dt.files;
+        }
+
+        function dosyaEkle(files) {
+            for (const file of files) {
+                if (!file.type.startsWith('image/')) continue;
+                birikimliFotolar.push(file);
+            }
+            guncelleFormInput();
+            renderOnizleme();
+        }
+
+        fotoInput.addEventListener('change', function(e) {
+            dosyaEkle(e.target.files);
+        });
+
+        fotoInputGizli.addEventListener('change', function(e) {
+            dosyaEkle(e.target.files);
+            fotoInputGizli.value = '';
+        });
+
+        btnFotoEkle.addEventListener('click', function() {
+            fotoInputGizli.click();
+        });
+    })();
 </script>
 }
