@@ -296,6 +296,15 @@ a:hover {
 
 .table-striped > tbody > tr:nth-of-type(odd) {
     --bs-table-striped-bg: var(--bg-table-stripe);
+    --bs-table-striped-color: var(--text-primary);
+}
+
+.table-hover > tbody > tr:hover {
+    --bs-table-hover-color: var(--text-primary);
+}
+
+.table > tbody > tr > td {
+    color: var(--text-primary);
 }
 
 /* ============================================
