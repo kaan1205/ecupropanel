@@ -9,9 +9,7 @@
         <div class="card auth-card">
             <div class="card-body">
                 <div class="auth-header">
-                    <div class="logo-text">
-                        <span class="brand-ecu">ecu</span><span class="brand-pro">pro</span>
-                    </div>
+                    <img src="https://www.ecupro.com/images/logo.png" alt="EcuPro" class="auth-logo" />
                     <p>Panele giriş yapın</p>
                 </div>
 
@@ -49,24 +47,5 @@
                 </form>
             </div>
         </div>
-
-        <div class="text-center mt-3">
-            <button class="btn btn-sm" id="authThemeToggle"
-                    style="color: var(--text-muted); font-size:0.8rem;">
-                <i class="bi bi-circle-half me-1"></i>Tema Değiştir
-            </button>
-        </div>
     </div>
 </div>
-
-@section Scripts {
-<script>
-    document.getElementById('authThemeToggle')?.addEventListener('click', function() {
-        const html = document.documentElement;
-        const current = html.getAttribute('data-theme');
-        const next = current === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', next);
-        localStorage.setItem('ecupro-theme', next);
-    });
-</script>
-}

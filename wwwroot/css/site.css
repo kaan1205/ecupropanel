@@ -1,84 +1,42 @@
 /* ============================================
-   EcuPro Panel — Brand Design System
-   Logo: "ecu" altın sarısı + "pro" beyaz
+   EcuPro Panel — Dark Only Theme
+   Brand: "ecu" altın #E5A100 + "pro" beyaz
    ============================================ */
 
 :root {
-    /* EcuPro Brand Colors */
     --ecu-gold: #E5A100;
     --ecu-gold-hover: #CC8F00;
     --ecu-gold-light: #F5BD3A;
     --ecu-gold-glow: rgba(229, 161, 0, 0.3);
-    --ecu-dark: #1A1A2E;
-    --ecu-darker: #0F0F1A;
 
-    /* Light Theme (default) */
-    --bg-primary: #F4F6F9;
-    --bg-secondary: #FFFFFF;
-    --bg-card: #FFFFFF;
-    --bg-navbar: #111122;
-    --bg-input: #FFFFFF;
-    --bg-table-head: #111122;
-    --bg-table-stripe: #F8F9FA;
-    --bg-card-header: #F8F9FA;
-    --bg-badge: #E8E8E8;
-
-    --text-primary: #1A1A2E;
-    --text-secondary: #6C757D;
-    --text-muted: #8E99A4;
-    --text-on-dark: #FFFFFF;
-    --text-on-card: #2D3436;
-    --text-link: #CC8F00;
-
-    --border-color: #DEE2E6;
-    --border-card: #E8ECF1;
-    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
-    --shadow-card-hover: 0 8px 25px rgba(0, 0, 0, 0.12);
-    --shadow-navbar: 0 4px 20px rgba(0, 0, 0, 0.15);
-
-    --transition-speed: 0.3s;
-}
-
-/* ============================================
-   Dark Theme
-   ============================================ */
-[data-theme="dark"] {
-    --bg-primary: #0A0A14;
-    --bg-secondary: #12121F;
+    --bg-body: #0A0A14;
+    --bg-surface: #12121F;
     --bg-card: #16162A;
+    --bg-card-hover: #1A1A32;
     --bg-navbar: #08080F;
     --bg-input: #1E1E34;
-    --bg-table-head: #08080F;
     --bg-table-stripe: #12122A;
-    --bg-card-header: #1E1E34;
+    --bg-card-header: #1A1A30;
     --bg-badge: #252540;
 
     --text-primary: #E8E8E8;
     --text-secondary: #A0A0B8;
     --text-muted: #6C6C88;
-    --text-on-card: #D4D4E8;
     --text-link: #F5BD3A;
 
     --border-color: #252540;
     --border-card: #2A2A48;
     --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.4);
-    --shadow-card-hover: 0 8px 25px rgba(0, 0, 0, 0.6);
+    --shadow-card-hover: 0 6px 20px rgba(0, 0, 0, 0.55);
     --shadow-navbar: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 /* ============================================
    Base
    ============================================ */
-* {
-    transition: background-color var(--transition-speed) ease,
-                color var(--transition-speed) ease,
-                border-color var(--transition-speed) ease,
-                box-shadow var(--transition-speed) ease;
-}
-
 body {
     font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background-color: var(--bg-primary);
+    background-color: var(--bg-body);
     color: var(--text-primary);
     min-height: 100vh;
 }
@@ -92,48 +50,29 @@ a:hover {
     color: var(--ecu-gold-light);
 }
 
+::selection {
+    background: var(--ecu-gold);
+    color: #0A0A14;
+}
+
 /* ============================================
    Navbar
    ============================================ */
 .ecu-navbar {
-    background: linear-gradient(135deg, #08080F 0%, #111122 100%);
+    background: linear-gradient(135deg, #06060C 0%, #0E0E1A 100%);
     box-shadow: var(--shadow-navbar);
-    padding: 0.5rem 0;
-    border-bottom: 3px solid var(--ecu-gold);
+    padding: 0.4rem 0;
+    border-bottom: 2px solid var(--ecu-gold);
 }
 
-.ecu-navbar .navbar-brand {
-    font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    color: #FFFFFF !important;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-transform: lowercase;
-}
-
-.ecu-navbar .navbar-brand .brand-ecu {
-    color: var(--ecu-gold);
-    font-weight: 800;
-}
-
-.ecu-navbar .navbar-brand .brand-pro {
-    color: #FFFFFF;
-    font-weight: 800;
-}
-
-.ecu-navbar .navbar-brand .brand-panel {
-    color: rgba(255, 255, 255, 0.4);
-    font-weight: 400;
-    font-size: 0.8rem;
-    margin-left: 0.15rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+.navbar-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
 }
 
 .ecu-navbar .nav-link {
-    color: rgba(255, 255, 255, 0.65) !important;
+    color: rgba(255, 255, 255, 0.6) !important;
     font-weight: 500;
     font-size: 0.9rem;
     padding: 0.5rem 1rem !important;
@@ -144,7 +83,7 @@ a:hover {
 .ecu-navbar .nav-link:hover,
 .ecu-navbar .nav-link.active {
     color: #FFFFFF !important;
-    background: rgba(229, 161, 0, 0.15);
+    background: rgba(229, 161, 0, 0.12);
 }
 
 .ecu-navbar .nav-link.active {
@@ -152,35 +91,13 @@ a:hover {
 }
 
 .ecu-navbar .nav-link i {
-    font-size: 1rem;
     color: var(--ecu-gold);
-    opacity: 0.8;
+    opacity: 0.7;
 }
 
-/* ============================================
-   Theme Toggle
-   ============================================ */
-.theme-toggle {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: var(--ecu-gold);
-    height: 36px;
-    padding: 0 12px;
-    border-radius: 10px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-    cursor: pointer;
-    font-size: 1rem;
-    white-space: nowrap;
-    line-height: 1;
-}
-
-.theme-toggle:hover {
-    background: rgba(229, 161, 0, 0.2);
-    border-color: var(--ecu-gold);
-    color: var(--ecu-gold-light);
+.ecu-navbar .nav-link:hover i,
+.ecu-navbar .nav-link.active i {
+    opacity: 1;
 }
 
 /* ============================================
@@ -207,13 +124,13 @@ a:hover {
 }
 
 .card-header.ecu-header {
-    background: linear-gradient(135deg, #111122 0%, #1A1A2E 100%);
+    background: linear-gradient(135deg, #0E0E1A 0%, #161630 100%);
     color: #FFFFFF;
     border-bottom: 2px solid var(--ecu-gold);
 }
 
 .card-body {
-    color: var(--text-on-card);
+    color: var(--text-primary);
     padding: 1.25rem;
 }
 
@@ -228,7 +145,7 @@ a:hover {
    ============================================ */
 .btn-ecu {
     background: linear-gradient(135deg, var(--ecu-gold) 0%, var(--ecu-gold-hover) 100%);
-    color: #0F0F1A;
+    color: #0A0A14;
     border: none;
     font-weight: 700;
     padding: 0.5rem 1.25rem;
@@ -238,7 +155,7 @@ a:hover {
 
 .btn-ecu:hover {
     background: linear-gradient(135deg, var(--ecu-gold-light) 0%, var(--ecu-gold) 100%);
-    color: #0F0F1A;
+    color: #0A0A14;
     box-shadow: 0 4px 20px var(--ecu-gold-glow);
     transform: translateY(-1px);
 }
@@ -254,7 +171,7 @@ a:hover {
 
 .btn-outline-ecu:hover {
     background: var(--ecu-gold);
-    color: #0F0F1A;
+    color: #0A0A14;
     box-shadow: 0 4px 16px var(--ecu-gold-glow);
 }
 
@@ -262,6 +179,27 @@ a:hover {
     border-radius: 8px;
     font-weight: 500;
     transition: all 0.2s ease;
+}
+
+.btn-outline-danger {
+    border-color: #dc3545;
+    color: #FF6B6B;
+}
+
+.btn-outline-danger:hover {
+    background: #dc3545;
+    color: #FFFFFF;
+}
+
+.btn-outline-secondary {
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+.btn-outline-secondary:hover {
+    background: var(--bg-card-header);
+    color: var(--text-primary);
+    border-color: var(--text-muted);
 }
 
 /* ============================================
@@ -297,9 +235,28 @@ a:hover {
     margin-bottom: 0.35rem;
 }
 
+.form-check-input {
+    background-color: var(--bg-input);
+    border-color: var(--border-color);
+}
+
 .form-check-input:checked {
     background-color: var(--ecu-gold);
     border-color: var(--ecu-gold);
+}
+
+.form-check-label {
+    color: var(--text-secondary);
+}
+
+.form-text {
+    color: var(--text-muted) !important;
+}
+
+.input-group-text {
+    background: var(--bg-card-header);
+    color: var(--text-secondary);
+    border-color: var(--border-color);
 }
 
 /* ============================================
@@ -308,10 +265,11 @@ a:hover {
 .table {
     color: var(--text-primary);
     --bs-table-bg: transparent;
+    --bs-table-color: var(--text-primary);
 }
 
 .table thead.ecu-thead {
-    background: linear-gradient(135deg, #0F0F1A 0%, #1A1A2E 100%);
+    background: linear-gradient(135deg, #0A0A14 0%, #141428 100%);
 }
 
 .table thead.ecu-thead th {
@@ -332,8 +290,8 @@ a:hover {
 }
 
 .table-hover tbody tr:hover {
-    background: var(--bg-table-stripe);
-    --bs-table-hover-bg: var(--bg-table-stripe);
+    background: rgba(229, 161, 0, 0.05) !important;
+    --bs-table-hover-bg: rgba(229, 161, 0, 0.05);
 }
 
 .table-striped > tbody > tr:nth-of-type(odd) {
@@ -353,7 +311,7 @@ a:hover {
 
 .badge-ecu {
     background: linear-gradient(135deg, var(--ecu-gold), var(--ecu-gold-hover));
-    color: #0F0F1A;
+    color: #0A0A14;
 }
 
 /* ============================================
@@ -367,34 +325,31 @@ a:hover {
 
 .alert-success {
     background: rgba(40, 167, 69, 0.15);
-    color: #28a745;
+    color: #5BDA76;
     border-left: 4px solid #28a745;
 }
 
 .alert-danger {
-    background: rgba(220, 53, 69, 0.12);
-    color: #dc3545;
+    background: rgba(220, 53, 69, 0.15);
+    color: #FF6B6B;
     border-left: 4px solid #dc3545;
 }
 
 .alert-info {
     background: rgba(229, 161, 0, 0.1);
-    color: var(--ecu-gold);
+    color: var(--ecu-gold-light);
     border-left: 4px solid var(--ecu-gold);
 }
 
-[data-theme="dark"] .alert-success { color: #5BDA76; }
-[data-theme="dark"] .alert-danger { color: #FF6B6B; }
-[data-theme="dark"] .alert-info { color: var(--ecu-gold-light); }
-
 /* ============================================
-   Login / Register Cards
+   Login / Register
    ============================================ */
 .auth-card {
     border: none;
     border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     overflow: hidden;
+    border: 1px solid var(--border-card);
     border-top: 3px solid var(--ecu-gold);
 }
 
@@ -407,29 +362,16 @@ a:hover {
     margin-bottom: 2rem;
 }
 
-.auth-header .logo-text {
-    font-size: 2.2rem;
-    font-weight: 800;
-    text-transform: lowercase;
+.auth-header .auth-logo {
+    height: 60px;
+    width: auto;
+    margin-bottom: 0.75rem;
 }
-
-.auth-header .logo-text .brand-ecu { color: var(--ecu-gold); }
-.auth-header .logo-text .brand-pro { color: var(--text-primary); }
 
 .auth-header p {
     color: var(--text-muted);
     font-size: 0.9rem;
     margin-top: 0.5rem;
-}
-
-[data-theme="dark"] .auth-card {
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    border: 1px solid var(--border-card);
-    border-top: 3px solid var(--ecu-gold);
-}
-
-[data-theme="dark"] .auth-header .logo-text .brand-pro {
-    color: #FFFFFF;
 }
 
 /* ============================================
@@ -493,14 +435,14 @@ a:hover {
 }
 
 .filter-panel .card-header:hover {
-    background: var(--bg-table-stripe);
+    background: var(--bg-card-hover);
 }
 
 /* ============================================
    Footer
    ============================================ */
 .ecu-footer {
-    background: var(--bg-secondary);
+    background: var(--bg-surface);
     border-top: 1px solid var(--border-card);
     color: var(--text-muted);
     padding: 1.5rem 0;
@@ -548,10 +490,6 @@ a:hover {
     border-left: 3px solid var(--ecu-gold);
 }
 
-[data-theme="dark"] .plaka-badge {
-    background: #1E1E34;
-}
-
 .page-title {
     font-weight: 700;
     font-size: 1.5rem;
@@ -573,18 +511,18 @@ input.text-uppercase::placeholder {
     text-transform: none;
 }
 
-/* Scrollbar (dark theme) */
-[data-theme="dark"] ::-webkit-scrollbar {
+/* Scrollbar */
+::-webkit-scrollbar {
     width: 8px;
 }
-[data-theme="dark"] ::-webkit-scrollbar-track {
-    background: var(--bg-primary);
+::-webkit-scrollbar-track {
+    background: var(--bg-body);
 }
-[data-theme="dark"] ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background: #2A2A48;
     border-radius: 4px;
 }
-[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
     background: var(--ecu-gold-hover);
 }
 
@@ -600,7 +538,7 @@ input.text-uppercase::placeholder {
         padding: 1.5rem;
     }
 
-    .ecu-navbar .navbar-brand {
-        font-size: 1.2rem;
+    .navbar-logo {
+        height: 32px;
     }
 }
