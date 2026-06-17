@@ -59,6 +59,7 @@ public class IslemController : Controller
     [HttpGet]
     public async Task<IActionResult> ExportCsv(IslemListeVM filtre)
     {
+        filtre.SayfaBoyutu = int.MaxValue;
         var model = await _islemService.Listele(filtre);
         var sb = new StringBuilder();
         sb.AppendLine("Plaka;Araç Sahibi;Telefon;E-Posta;KM;Yapılan İşlem;Ekleyen;Tarih;Fotoğraf Sayısı");
@@ -75,6 +76,7 @@ public class IslemController : Controller
     [HttpGet]
     public async Task<IActionResult> ExportExcel(IslemListeVM filtre)
     {
+        filtre.SayfaBoyutu = int.MaxValue;
         var model = await _islemService.Listele(filtre);
 
         using var workbook = new XLWorkbook();

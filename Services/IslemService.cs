@@ -25,11 +25,16 @@ public class IslemService
             .Include(i => i.Fotograflar)
             .AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(filtre.Plaka))
-            query = query.Where(i => i.AracPlaka.Contains(filtre.Plaka));
-
-        if (!string.IsNullOrWhiteSpace(filtre.AracSahibi))
-            query = query.Where(i => i.AracSahibi.Contains(filtre.AracSahibi));
+        if (!string.IsNullOrWhiteSpace(filtre.Arama))
+        {
+            var arama = filtre.Arama.Trim();
+            query = query.Where(i =>
+                i.AracPlaka.Contains(arama) ||
+                i.AracSahibi.Contains(arama) ||
+                (i.Telefon != null && i.Telefon.Contains(arama)) ||
+                (i.Email != null && i.Email.Contains(arama)) ||
+                i.YapilanIslem.Contains(arama));
+        }
 
         if (filtre.BaslangicTarih.HasValue)
             query = query.Where(i => i.EklenmeTarihi >= filtre.BaslangicTarih.Value);
@@ -37,17 +42,16 @@ public class IslemService
         if (filtre.BitisTarih.HasValue)
             query = query.Where(i => i.EklenmeTarihi <= filtre.BitisTarih.Value.AddDays(1));
 
-        if (filtre.EkleyenKullaniciId.HasValue)
-            query = query.Where(i => i.EkleyenKullaniciId == filtre.EkleyenKullaniciId.Value);
+        filtre.ToplamKayit = await query.CountAsync();
 
-        if (filtre.MinKM.HasValue)
-            query = query.Where(i => i.AracKM >= filtre.MinKM.Value);
-
-        if (filtre.MaxKM.HasValue)
-            query = query.Where(i => i.AracKM <= filtre.MaxKM.Value);
+        if (filtre.Sayfa < 1) filtre.Sayfa = 1;
+        if (filtre.Sayfa > filtre.ToplamSayfa && filtre.ToplamSayfa > 0)
+            filtre.Sayfa = filtre.ToplamSayfa;
 
         var islemler = await query
             .OrderByDescending(i => i.EklenmeTarihi)
+            .Skip((filtre.Sayfa - 1) * filtre.SayfaBoyutu)
+            .Take(filtre.SayfaBoyutu)
             .Select(i => new IslemSatirVM
             {
                 Id = i.Id,
