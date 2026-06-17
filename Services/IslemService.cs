@@ -81,6 +81,8 @@ public class IslemService
         {
             AracPlaka = vm.AracPlaka.ToUpperInvariant().Trim(),
             AracSahibi = vm.AracSahibi.Trim(),
+            Telefon = vm.Telefon?.Trim(),
+            Email = vm.Email?.Trim(),
             AracKM = vm.AracKM,
             YapilanIslem = vm.YapilanIslem.Trim(),
             EkleyenKullaniciId = kullaniciId,

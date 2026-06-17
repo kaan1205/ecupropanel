@@ -12,6 +12,14 @@ public class IslemEkleVM
     [MaxLength(150)]
     public string AracSahibi { get; set; } = string.Empty;
 
+    [Phone(ErrorMessage = "Geçerli bir telefon numarası giriniz.")]
+    [MaxLength(20)]
+    public string? Telefon { get; set; }
+
+    [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi giriniz.")]
+    [MaxLength(150)]
+    public string? Email { get; set; }
+
     [Required(ErrorMessage = "KM zorunludur.")]
     [Range(0, 9999999, ErrorMessage = "KM 0-9999999 arasında olmalıdır.")]
     public int AracKM { get; set; }
