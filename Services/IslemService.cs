@@ -53,6 +53,8 @@ public class IslemService
                 Id = i.Id,
                 AracPlaka = i.AracPlaka,
                 AracSahibi = i.AracSahibi,
+                Telefon = i.Telefon,
+                Email = i.Email,
                 AracKM = i.AracKM,
                 YapilanIslem = i.YapilanIslem,
                 EkleyenAd = i.EkleyenKullanici.Ad + " " + i.EkleyenKullanici.Soyad,

@@ -19,6 +19,8 @@ public class IslemSatirVM
     public int Id { get; set; }
     public string AracPlaka { get; set; } = string.Empty;
     public string AracSahibi { get; set; } = string.Empty;
+    public string? Telefon { get; set; }
+    public string? Email { get; set; }
     public int AracKM { get; set; }
     public string YapilanIslem { get; set; } = string.Empty;
     public string EkleyenAd { get; set; } = string.Empty;

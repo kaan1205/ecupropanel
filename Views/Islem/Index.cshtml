@@ -116,9 +116,9 @@ else
                     <tr>
                         <th>Plaka</th>
                         <th>Araç Sahibi</th>
-                        <th>KM</th>
+                        <th>Telefon</th>
+                        <th>E-Posta</th>
                         <th>Yapılan İşlem</th>
-                        <th>Ekleyen</th>
                         <th>Tarih</th>
                         <th>Foto</th>
                         <th></th>
@@ -130,18 +130,40 @@ else
                         <tr>
                             <td><span class="plaka-badge">@islem.AracPlaka</span></td>
                             <td>@islem.AracSahibi</td>
-                            <td>@islem.AracKM.ToString("N0") km</td>
                             <td>
-                                @if (islem.YapilanIslem.Length > 60)
+                                @if (!string.IsNullOrEmpty(islem.Telefon))
                                 {
-                                    @islem.YapilanIslem[..60]<text>...</text>
+                                    <a href="tel:@islem.Telefon" class="text-decoration-none" style="color:var(--text-ecu);">
+                                        <i class="bi bi-telephone me-1"></i>@islem.Telefon
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(islem.Email))
+                                {
+                                    <a href="mailto:@islem.Email" class="text-decoration-none" style="color:var(--text-ecu);">
+                                        <i class="bi bi-envelope me-1"></i>@islem.Email
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td>
+                                @if (islem.YapilanIslem.Length > 40)
+                                {
+                                    @islem.YapilanIslem[..40]<text>...</text>
                                 }
                                 else
                                 {
                                     @islem.YapilanIslem
                                 }
                             </td>
-                            <td><small>@islem.EkleyenAd</small></td>
                             <td><small>@islem.EklenmeTarihi.ToString("dd.MM.yyyy HH:mm")</small></td>
                             <td>
                                 @if (islem.FotoSayisi > 0)
