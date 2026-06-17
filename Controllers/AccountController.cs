@@ -120,12 +120,24 @@ public class AccountController : Controller
 
     [Authorize]
     [HttpGet]
-    public IActionResult Beklemede()
+    public async Task<IActionResult> Beklemede()
     {
-        if (User.IsInRole("Admin"))
+        var kullanici = await _userManager.GetUserAsync(User);
+        if (kullanici != null && await _userManager.IsInRoleAsync(kullanici, "Admin"))
             return RedirectToAction("Index", "Islem");
 
         return View();
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> RolKontrol()
+    {
+        var kullanici = await _userManager.GetUserAsync(User);
+        if (kullanici != null && await _userManager.IsInRoleAsync(kullanici, "Admin"))
+            return Json(new { admin = true });
+
+        return Json(new { admin = false });
     }
 
     [HttpPost]

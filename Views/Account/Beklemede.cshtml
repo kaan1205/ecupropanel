@@ -6,17 +6,17 @@
     <div class="col-md-6 col-lg-5">
         <div class="card auth-card text-center">
             <div class="card-body p-5">
-                <div style="font-size:4rem;color:var(--ecu-gold);margin-bottom:1rem;">
+                <div id="bekleIcon" style="font-size:4rem;color:var(--ecu-gold);margin-bottom:1rem;">
                     <i class="bi bi-hourglass-split"></i>
                 </div>
-                <h3 class="mb-3" style="color:var(--text-primary);">Onay Bekleniyor</h3>
-                <p style="color:var(--text-secondary);line-height:1.7;">
+                <h3 id="bekleBaslik" class="mb-3" style="color:var(--text-primary);">Onay Bekleniyor</h3>
+                <p id="bekleAciklama" style="color:var(--text-secondary);line-height:1.7;">
                     Hesabınız başarıyla oluşturuldu.<br />
                     Panele erişim için bir <strong style="color:var(--ecu-gold);">yönetici</strong> tarafından
                     hesabınızın onaylanması gerekmektedir.
                 </p>
                 <p style="color:var(--text-muted);font-size:0.85rem;" class="mb-4">
-                    Onaylandıktan sonra tekrar giriş yaparak paneli kullanabilirsiniz.
+                    <i class="bi bi-arrow-repeat me-1"></i>Otomatik kontrol ediliyor...
                 </p>
                 <form asp-controller="Account" asp-action="Logout" method="post">
                     @Html.AntiForgeryToken()
@@ -28,3 +28,23 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+<script>
+    (function() {
+        function kontrol() {
+            fetch('/Account/RolKontrol')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.admin) {
+                        document.getElementById('bekleIcon').innerHTML = '<i class="bi bi-check-circle" style="color:#5BDA76;"></i>';
+                        document.getElementById('bekleBaslik').textContent = 'Onaylandı!';
+                        document.getElementById('bekleAciklama').textContent = 'Yönlendiriliyorsunuz...';
+                        setTimeout(function() { window.location.href = '/Islem'; }, 1000);
+                    }
+                });
+        }
+        setInterval(kontrol, 5000);
+    })();
+</script>
+}
