@@ -1,12 +1,12 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using AraPanelWeb.Filters;
 using AraPanelWeb.Helpers;
 using AraPanelWeb.Models.ViewModels;
 using AraPanelWeb.Services;
 
 namespace AraPanelWeb.Controllers;
 
-[Authorize(Roles = "Admin")]
+[AdminRequired]
 public class IslemController : Controller
 {
     private readonly IslemService _islemService;

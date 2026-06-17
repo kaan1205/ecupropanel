@@ -1,16 +1,16 @@
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AraPanelWeb.Data;
+using AraPanelWeb.Filters;
 using AraPanelWeb.Models.Entities;
 using AraPanelWeb.Models.ViewModels;
 using AraPanelWeb.Services;
 
 namespace AraPanelWeb.Controllers;
 
-[Authorize(Roles = "Admin")]
+[AdminRequired]
 public class KullaniciController : Controller
 {
     private readonly UserManager<Kullanici> _userManager;
@@ -157,8 +157,6 @@ public class KullaniciController : Controller
         await _userManager.AddClaimAsync(kullanici, new Claim("Ad", kullanici.Ad));
         await _userManager.AddClaimAsync(kullanici, new Claim("Soyad", kullanici.Soyad));
 
-        await _userManager.UpdateSecurityStampAsync(kullanici);
-
         TempData["Basari"] = $"{kullanici.Ad} {kullanici.Soyad} güncellendi.";
         return RedirectToAction("Index");
     }
@@ -210,7 +208,6 @@ public class KullaniciController : Controller
 
         kullanici.AktifMi = !kullanici.AktifMi;
         await _userManager.UpdateAsync(kullanici);
-        await _userManager.UpdateSecurityStampAsync(kullanici);
 
         var durum = kullanici.AktifMi ? "aktif" : "pasif";
         TempData["Basari"] = $"{kullanici.Ad} {kullanici.Soyad} {durum} yapıldı.";
