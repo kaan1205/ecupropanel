@@ -1,0 +1,50 @@
+@{
+    ViewData["Title"] = "Onay Bekleniyor";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 col-lg-5">
+        <div class="card auth-card text-center">
+            <div class="card-body p-5">
+                <div id="bekleIcon" style="font-size:4rem;color:var(--ecu-gold);margin-bottom:1rem;">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <h3 id="bekleBaslik" class="mb-3" style="color:var(--text-primary);">Onay Bekleniyor</h3>
+                <p id="bekleAciklama" style="color:var(--text-secondary);line-height:1.7;">
+                    Hesabınız başarıyla oluşturuldu.<br />
+                    Panele erişim için bir <strong style="color:var(--ecu-gold);">yönetici</strong> tarafından
+                    hesabınızın onaylanması gerekmektedir.
+                </p>
+                <p style="color:var(--text-muted);font-size:0.85rem;" class="mb-4">
+                    Onaylandıktan sonra otomatik olarak panele yönlendirileceksiniz.
+                </p>
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-ecu">
+                        <i class="bi bi-box-arrow-right me-1"></i>Çıkış Yap
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    (function() {
+        function kontrol() {
+            fetch('/Account/RolKontrol')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.admin) {
+                        document.getElementById('bekleIcon').innerHTML = '<i class="bi bi-check-circle" style="color:#5BDA76;"></i>';
+                        document.getElementById('bekleBaslik').textContent = 'Onaylandı!';
+                        document.getElementById('bekleAciklama').textContent = 'Yönlendiriliyorsunuz...';
+                        setTimeout(function() { window.location.href = '/Islem'; }, 1000);
+                    }
+                });
+        }
+        setInterval(kontrol, 3000);
+    })();
+</script>
+}

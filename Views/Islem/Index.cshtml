@@ -5,9 +5,17 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="page-title"><i class="bi bi-list-ul"></i>İşlem Listesi</h2>
-    <a asp-action="Ekle" class="btn btn-ecu">
-        <i class="bi bi-plus-circle me-1"></i>Yeni İşlem
-    </a>
+    <div class="d-flex gap-2">
+        <a asp-action="ExportCsv" asp-all-route-data="@GetFilterRouteData(Model)" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-filetype-csv me-1"></i>CSV
+        </a>
+        <a asp-action="ExportExcel" asp-all-route-data="@GetFilterRouteData(Model)" class="btn btn-outline-success btn-sm">
+            <i class="bi bi-file-earmark-excel me-1"></i>Excel
+        </a>
+        <a asp-action="Ekle" class="btn btn-ecu">
+            <i class="bi bi-plus-circle me-1"></i>Yeni İşlem
+        </a>
+    </div>
 </div>
 
 <!-- İstatistik Şeridi -->
@@ -15,7 +23,7 @@
     <div class="stat-item">
         <div class="stat-icon gold"><i class="bi bi-car-front-fill"></i></div>
         <div>
-            <div class="stat-value">@Model.Islemler.Count</div>
+            <div class="stat-value">@Model.ToplamKayit</div>
             <div class="stat-label">Toplam İşlem</div>
         </div>
     </div>
@@ -42,62 +50,30 @@
     </div>
 </div>
 
-<!-- Filtre Paneli -->
-<div class="card filter-panel mb-4">
-    <div class="card-header" data-bs-toggle="collapse" data-bs-target="#filtrePanel" role="button">
-        <i class="bi bi-funnel me-1 text-ecu"></i>Filtreler
-        <i class="bi bi-chevron-down float-end"></i>
-    </div>
-    <div id="filtrePanel" class="collapse @(HasActiveFilter(Model) ? "show" : "")">
-        <div class="card-body">
-            <form method="get" asp-action="Index">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <label class="form-label">PLAKA</label>
-                        <input asp-for="Plaka" class="form-control text-uppercase" placeholder="34 ABC..." />
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">ARAÇ SAHİBİ</label>
-                        <input asp-for="AracSahibi" class="form-control" />
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">BAŞLANGIÇ TARİHİ</label>
-                        <input asp-for="BaslangicTarih" type="date" class="form-control" />
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">BİTİŞ TARİHİ</label>
-                        <input asp-for="BitisTarih" type="date" class="form-control" />
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">EKLEYEN</label>
-                        <select asp-for="EkleyenKullaniciId" class="form-select">
-                            <option value="">-- Tümü --</option>
-                            @foreach (var k in Model.KullaniciListesi)
-                            {
-                                <option value="@k.Id">@k.TamAd</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">MİN KM</label>
-                        <input asp-for="MinKM" type="number" class="form-control" />
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">MAX KM</label>
-                        <input asp-for="MaxKM" type="number" class="form-control" />
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end gap-2">
-                        <button type="submit" class="btn btn-ecu">
-                            <i class="bi bi-search me-1"></i>Ara
-                        </button>
-                        <a asp-action="Index" class="btn btn-outline-ecu">
-                            <i class="bi bi-x-lg"></i>
-                        </a>
-                    </div>
-                </div>
-            </form>
+<!-- Arama Barı -->
+<div class="mb-4">
+    <form method="get" asp-action="Index">
+        <div class="d-flex gap-2 align-items-end flex-wrap">
+            <div class="flex-grow-1">
+                <input asp-for="Arama" class="form-control" placeholder="Plaka, araç sahibi, telefon, e-posta veya işlem ara..." />
+            </div>
+            <div>
+                <input asp-for="BaslangicTarih" type="date" class="form-control" title="Başlangıç Tarihi" />
+            </div>
+            <div>
+                <input asp-for="BitisTarih" type="date" class="form-control" title="Bitiş Tarihi" />
+            </div>
+            <button type="submit" class="btn btn-ecu">
+                <i class="bi bi-search me-1"></i>Ara
+            </button>
+            @if (HasActiveFilter(Model))
+            {
+                <a asp-action="Index" class="btn btn-outline-ecu">
+                    <i class="bi bi-x-lg me-1"></i>Temizle
+                </a>
+            }
         </div>
-    </div>
+    </form>
 </div>
 
 <!-- Sonuç Tablosu -->
@@ -116,9 +92,9 @@ else
                     <tr>
                         <th>Plaka</th>
                         <th>Araç Sahibi</th>
-                        <th>KM</th>
+                        <th>Telefon</th>
+                        <th>E-Posta</th>
                         <th>Yapılan İşlem</th>
-                        <th>Ekleyen</th>
                         <th>Tarih</th>
                         <th>Foto</th>
                         <th></th>
@@ -130,18 +106,40 @@ else
                         <tr>
                             <td><span class="plaka-badge">@islem.AracPlaka</span></td>
                             <td>@islem.AracSahibi</td>
-                            <td>@islem.AracKM.ToString("N0") km</td>
                             <td>
-                                @if (islem.YapilanIslem.Length > 60)
+                                @if (!string.IsNullOrEmpty(islem.Telefon))
                                 {
-                                    @islem.YapilanIslem[..60]<text>...</text>
+                                    <a href="tel:@islem.Telefon" class="text-decoration-none" style="color:var(--text-ecu);">
+                                        <i class="bi bi-telephone me-1"></i>@islem.Telefon
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(islem.Email))
+                                {
+                                    <a href="mailto:@islem.Email" class="text-decoration-none" style="color:var(--text-ecu);">
+                                        <i class="bi bi-envelope me-1"></i>@islem.Email
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                            <td>
+                                @if (islem.YapilanIslem.Length > 40)
+                                {
+                                    @islem.YapilanIslem[..40]<text>...</text>
                                 }
                                 else
                                 {
                                     @islem.YapilanIslem
                                 }
                             </td>
-                            <td><small>@islem.EkleyenAd</small></td>
                             <td><small>@islem.EklenmeTarihi.ToString("dd.MM.yyyy HH:mm")</small></td>
                             <td>
                                 @if (islem.FotoSayisi > 0)
@@ -162,18 +160,65 @@ else
             </table>
         </div>
     </div>
-    <p class="text-center mt-3" style="color: var(--text-muted); font-size:0.85rem;">
-        Toplam <strong style="color: var(--ecu-red);">@Model.Islemler.Count</strong> kayıt
+
+    <!-- Sayfalama -->
+    @if (Model.ToplamSayfa > 1)
+    {
+        <nav class="mt-3">
+            <ul class="pagination justify-content-center mb-0">
+                <li class="page-item @(Model.Sayfa <= 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-Arama="@Model.Arama"
+                       asp-route-BaslangicTarih="@Model.BaslangicTarih?.ToString("yyyy-MM-dd")"
+                       asp-route-BitisTarih="@Model.BitisTarih?.ToString("yyyy-MM-dd")"
+                       asp-route-Sayfa="@(Model.Sayfa - 1)">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+                @for (int p = 1; p <= Model.ToplamSayfa; p++)
+                {
+                    <li class="page-item @(p == Model.Sayfa ? "active" : "")">
+                        <a class="page-link" asp-action="Index"
+                           asp-route-Arama="@Model.Arama"
+                           asp-route-BaslangicTarih="@Model.BaslangicTarih?.ToString("yyyy-MM-dd")"
+                           asp-route-BitisTarih="@Model.BitisTarih?.ToString("yyyy-MM-dd")"
+                           asp-route-Sayfa="@p">@p</a>
+                    </li>
+                }
+                <li class="page-item @(Model.Sayfa >= Model.ToplamSayfa ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-Arama="@Model.Arama"
+                       asp-route-BaslangicTarih="@Model.BaslangicTarih?.ToString("yyyy-MM-dd")"
+                       asp-route-BitisTarih="@Model.BitisTarih?.ToString("yyyy-MM-dd")"
+                       asp-route-Sayfa="@(Model.Sayfa + 1)">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    }
+
+    <p class="text-center mt-2" style="color: var(--text-muted); font-size:0.85rem;">
+        Toplam <strong style="color: var(--ecu-red);">@Model.ToplamKayit</strong> kayıt
+        @if (Model.ToplamSayfa > 1)
+        {
+            <text>— Sayfa @Model.Sayfa / @Model.ToplamSayfa</text>
+        }
     </p>
 }
 
 @functions {
     bool HasActiveFilter(IslemListeVM m) =>
-        !string.IsNullOrEmpty(m.Plaka) ||
-        !string.IsNullOrEmpty(m.AracSahibi) ||
+        !string.IsNullOrEmpty(m.Arama) ||
         m.BaslangicTarih.HasValue ||
-        m.BitisTarih.HasValue ||
-        m.EkleyenKullaniciId.HasValue ||
-        m.MinKM.HasValue ||
-        m.MaxKM.HasValue;
+        m.BitisTarih.HasValue;
+
+    Dictionary<string, string> GetFilterRouteData(IslemListeVM m)
+    {
+        var d = new Dictionary<string, string>();
+        if (!string.IsNullOrEmpty(m.Arama)) d["Arama"] = m.Arama;
+        if (m.BaslangicTarih.HasValue) d["BaslangicTarih"] = m.BaslangicTarih.Value.ToString("yyyy-MM-dd");
+        if (m.BitisTarih.HasValue) d["BitisTarih"] = m.BitisTarih.Value.ToString("yyyy-MM-dd");
+        return d;
+    }
 }

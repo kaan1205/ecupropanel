@@ -488,15 +488,16 @@ a:hover {
 }
 
 .plaka-badge {
-    background: var(--bg-badge);
-    color: var(--text-primary);
-    font-weight: 700;
-    font-size: 0.85rem;
+    background: rgba(229, 161, 0, 0.15);
+    color: var(--ecu-gold);
+    font-weight: 800;
+    font-size: 0.95rem;
     padding: 0.35em 0.75em;
     border-radius: 6px;
-    letter-spacing: 0.5px;
+    letter-spacing: 1.5px;
     font-family: 'Courier New', monospace;
-    border-left: 3px solid var(--ecu-gold);
+    border: 1px solid rgba(229, 161, 0, 0.4);
+    text-transform: uppercase;
 }
 
 .page-title {
@@ -538,6 +539,31 @@ input.text-uppercase::placeholder {
 /* ============================================
    Responsive
    ============================================ */
+/* Pagination */
+.page-link {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.page-link:hover {
+    background: var(--bg-card-header);
+    border-color: var(--ecu-gold);
+    color: var(--ecu-gold);
+}
+
+.page-item.active .page-link {
+    background: var(--ecu-gold);
+    border-color: var(--ecu-gold);
+    color: #000;
+}
+
+.page-item.disabled .page-link {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+    color: var(--text-muted);
+}
+
 @media (max-width: 768px) {
     .stat-strip {
         flex-direction: column;

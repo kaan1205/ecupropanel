@@ -1,0 +1,105 @@
+@model List<KullaniciListeItemVM>
+@{
+    ViewData["Title"] = "Kullanıcı Yönetimi";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="page-title"><i class="bi bi-people"></i>Kullanıcı Yönetimi</h2>
+    <a asp-action="Ekle" class="btn btn-ecu">
+        <i class="bi bi-person-plus me-1"></i>Yeni Kullanıcı
+    </a>
+</div>
+
+<div class="stat-strip">
+    <div class="stat-item">
+        <div class="stat-icon gold"><i class="bi bi-people-fill"></i></div>
+        <div>
+            <div class="stat-value">@Model.Count</div>
+            <div class="stat-label">Toplam Kullanıcı</div>
+        </div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-icon green"><i class="bi bi-person-check-fill"></i></div>
+        <div>
+            <div class="stat-value">@Model.Count(k => k.AktifMi)</div>
+            <div class="stat-label">Aktif</div>
+        </div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-icon blue"><i class="bi bi-shield-fill-check"></i></div>
+        <div>
+            <div class="stat-value">@Model.Count(k => k.Rol == "Admin")</div>
+            <div class="stat-label">Admin</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover table-striped mb-0">
+            <thead class="ecu-thead">
+                <tr>
+                    <th>Ad Soyad</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>İşlem Sayısı</th>
+                    <th>Kayıt Tarihi</th>
+                    <th>Durum</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var k in Model)
+                {
+                    <tr class="@(k.AktifMi ? "" : "opacity-50")">
+                        <td>
+                            <i class="bi bi-person-circle me-1 text-ecu"></i>
+                            <strong>@k.Ad @k.Soyad</strong>
+                        </td>
+                        <td><small>@k.Email</small></td>
+                        <td>
+                            @if (k.Rol == "Admin")
+                            {
+                                <span class="badge bg-warning text-dark"><i class="bi bi-shield-check me-1"></i>Admin</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Kullanıcı</span>
+                            }
+                        </td>
+                        <td><span class="badge badge-ecu">@k.IslemSayisi</span></td>
+                        <td><small>@k.OlusturulmaTarihi.ToString("dd.MM.yyyy")</small></td>
+                        <td>
+                            @if (k.AktifMi)
+                            {
+                                <span class="badge bg-success">Aktif</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Pasif</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a asp-action="Duzenle" asp-route-id="@k.Id" class="btn btn-sm btn-outline-ecu" title="Düzenle">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="SifreSifirla" asp-route-id="@k.Id" class="btn btn-sm btn-outline-ecu" title="Şifre Sıfırla">
+                                    <i class="bi bi-key"></i>
+                                </a>
+                                <form asp-action="DurumDegistir" asp-route-id="@k.Id" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm @(k.AktifMi ? "btn-outline-danger" : "btn-outline-success")"
+                                            title="@(k.AktifMi ? "Pasif Yap" : "Aktif Yap")"
+                                            onclick="return confirm('@(k.AktifMi ? "Bu kullanıcıyı pasif yapmak istediğinize emin misiniz?" : "Bu kullanıcıyı aktif yapmak istediğinize emin misiniz?")');">
+                                        <i class="bi @(k.AktifMi ? "bi-person-x" : "bi-person-check")"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

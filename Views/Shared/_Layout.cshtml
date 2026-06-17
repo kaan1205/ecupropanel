@@ -12,8 +12,18 @@
     <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
 </head>
+@inject Microsoft.AspNetCore.Identity.UserManager<AraPanelWeb.Models.Entities.Kullanici> UserManager
 <body>
-    @if (User.Identity?.IsAuthenticated == true)
+    @{
+        var isAdmin = false;
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            var currentUser = await UserManager.GetUserAsync(User);
+            if (currentUser != null)
+                isAdmin = await UserManager.IsInRoleAsync(currentUser, "Admin");
+        }
+    }
+    @if (isAdmin)
     {
         <nav class="navbar navbar-expand-lg ecu-navbar">
             <div class="container">
@@ -41,6 +51,12 @@
                             <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Log" ? "active" : "")"
                                asp-controller="Log" asp-action="Index">
                                 <i class="bi bi-clock-history me-1"></i>Loglar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Kullanici" ? "active" : "")"
+                               asp-controller="Kullanici" asp-action="Index">
+                                <i class="bi bi-people me-1"></i>Kullanıcılar
                             </a>
                         </li>
                     </ul>

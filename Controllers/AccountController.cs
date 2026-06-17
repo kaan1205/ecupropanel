@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using AraPanelWeb.Models.Entities;
@@ -60,7 +61,10 @@ public class AccountController : Controller
         if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             return Redirect(returnUrl);
 
-        return RedirectToAction("Index", "Islem");
+        if (await _userManager.IsInRoleAsync(kullanici, "Admin"))
+            return RedirectToAction("Index", "Islem");
+
+        return RedirectToAction("Beklemede");
     }
 
     [HttpGet]
@@ -98,11 +102,42 @@ public class AccountController : Controller
         await _userManager.AddClaimAsync(kullanici, new Claim("Ad", kullanici.Ad));
         await _userManager.AddClaimAsync(kullanici, new Claim("Soyad", kullanici.Soyad));
 
+        var toplamKullanici = _userManager.Users.Count();
+        var rol = toplamKullanici == 1 ? "Admin" : "Kullanici";
+        await _userManager.AddToRoleAsync(kullanici, rol);
+
         await _signInManager.SignInAsync(kullanici, isPersistent: false);
         await _logService.LogEkle("KAYIT");
 
-        TempData["Basari"] = "Kayıt başarılı! Hoş geldiniz.";
-        return RedirectToAction("Index", "Islem");
+        if (rol == "Admin")
+        {
+            TempData["Basari"] = "Kayıt başarılı! Hoş geldiniz.";
+            return RedirectToAction("Index", "Islem");
+        }
+
+        return RedirectToAction("Beklemede");
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> Beklemede()
+    {
+        var kullanici = await _userManager.GetUserAsync(User);
+        if (kullanici != null && await _userManager.IsInRoleAsync(kullanici, "Admin"))
+            return RedirectToAction("Index", "Islem");
+
+        return View();
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> RolKontrol()
+    {
+        var kullanici = await _userManager.GetUserAsync(User);
+        if (kullanici != null && await _userManager.IsInRoleAsync(kullanici, "Admin"))
+            return Json(new { admin = true });
+
+        return Json(new { admin = false });
     }
 
     [HttpPost]

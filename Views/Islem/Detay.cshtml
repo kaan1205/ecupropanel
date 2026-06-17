@@ -14,6 +14,9 @@
                 <a asp-action="Index" class="btn btn-outline-ecu">
                     <i class="bi bi-arrow-left me-1"></i>Liste
                 </a>
+                <a asp-action="Duzenle" asp-route-id="@Model.Id" class="btn btn-ecu">
+                    <i class="bi bi-pencil me-1"></i>Düzenle
+                </a>
                 <form asp-action="Sil" asp-route-id="@Model.Id" method="post"
                       onsubmit="return confirm('Bu işlemi silmek istediğinize emin misiniz?');">
                     @Html.AntiForgeryToken()
@@ -42,6 +45,30 @@
                     <div class="col-md-4 mb-3">
                         <div class="form-label" style="margin-bottom:0.15rem;">KİLOMETRE</div>
                         <span class="fs-5 fw-bold">@Model.AracKM.ToString("N0") km</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="form-label" style="margin-bottom:0.15rem;"><i class="bi bi-telephone me-1"></i>TELEFON</div>
+                        @if (!string.IsNullOrEmpty(Model.Telefon))
+                        {
+                            <a href="tel:@Model.Telefon" class="fs-5 fw-bold text-decoration-none" style="color:var(--text-ecu);">@Model.Telefon</a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">—</span>
+                        }
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-label" style="margin-bottom:0.15rem;"><i class="bi bi-envelope me-1"></i>E-POSTA</div>
+                        @if (!string.IsNullOrEmpty(Model.Email))
+                        {
+                            <a href="mailto:@Model.Email" class="fs-5 fw-bold text-decoration-none" style="color:var(--text-ecu);">@Model.Email</a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">—</span>
+                        }
                     </div>
                 </div>
             </div>

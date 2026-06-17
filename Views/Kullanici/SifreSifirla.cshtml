@@ -1,0 +1,46 @@
+@model SifreSifirlaVM
+@{
+    ViewData["Title"] = "Şifre Sıfırla";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <h2 class="page-title mb-4"><i class="bi bi-key"></i>Şifre Sıfırla</h2>
+
+        <div class="card">
+            <div class="card-header ecu-header">
+                <i class="bi bi-person me-1"></i>@Model.KullaniciAd
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="SifreSifirla" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="KullaniciId" />
+                    <input type="hidden" asp-for="KullaniciAd" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3" style="font-size:0.85rem;"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="YeniSifre" class="form-label">YENİ ŞİFRE <span class="text-ecu">*</span></label>
+                        <input asp-for="YeniSifre" type="password" class="form-control" />
+                        <div class="form-text" style="color:var(--text-muted);">En az 6 karakter, en az 1 rakam</div>
+                        <span asp-validation-for="YeniSifre" class="text-danger" style="font-size:0.8rem;"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="YeniSifreTekrar" class="form-label">YENİ ŞİFRE TEKRAR <span class="text-ecu">*</span></label>
+                        <input asp-for="YeniSifreTekrar" type="password" class="form-control" />
+                        <span asp-validation-for="YeniSifreTekrar" class="text-danger" style="font-size:0.8rem;"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-ecu">
+                            <i class="bi bi-check-circle me-1"></i>Şifreyi Sıfırla
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-ecu">
+                            <i class="bi bi-arrow-left me-1"></i>İptal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
