@@ -1,11 +1,11 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using AraPanelWeb.Filters;
 using Microsoft.EntityFrameworkCore;
 using AraPanelWeb.Data;
 
 namespace AraPanelWeb.Controllers;
 
-[Authorize]
+[AdminRequired]
 public class LogController : Controller
 {
     private readonly AppDbContext _db;
