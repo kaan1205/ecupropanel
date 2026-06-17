@@ -13,13 +13,15 @@ public class IslemEkleVM
     [MaxLength(150)]
     public string AracSahibi { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "Telefon zorunludur.")]
     [Phone(ErrorMessage = "Geçerli bir telefon numarası giriniz.")]
     [MaxLength(20)]
-    public string? Telefon { get; set; }
+    public string Telefon { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "E-posta zorunludur.")]
     [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi giriniz.")]
     [MaxLength(150)]
-    public string? Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "KM zorunludur.")]
     [Range(0, 9999999, ErrorMessage = "KM 0-9999999 arasında olmalıdır.")]
@@ -43,13 +45,15 @@ public class IslemDuzenleVM
     [MaxLength(150)]
     public string AracSahibi { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "Telefon zorunludur.")]
     [Phone(ErrorMessage = "Geçerli bir telefon numarası giriniz.")]
     [MaxLength(20)]
-    public string? Telefon { get; set; }
+    public string Telefon { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "E-posta zorunludur.")]
     [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi giriniz.")]
     [MaxLength(150)]
-    public string? Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "KM zorunludur.")]
     [Range(0, 9999999, ErrorMessage = "KM 0-9999999 arasında olmalıdır.")]
