@@ -157,6 +157,8 @@ public class KullaniciController : Controller
         await _userManager.AddClaimAsync(kullanici, new Claim("Ad", kullanici.Ad));
         await _userManager.AddClaimAsync(kullanici, new Claim("Soyad", kullanici.Soyad));
 
+        await _userManager.UpdateSecurityStampAsync(kullanici);
+
         TempData["Basari"] = $"{kullanici.Ad} {kullanici.Soyad} güncellendi.";
         return RedirectToAction("Index");
     }
@@ -208,6 +210,7 @@ public class KullaniciController : Controller
 
         kullanici.AktifMi = !kullanici.AktifMi;
         await _userManager.UpdateAsync(kullanici);
+        await _userManager.UpdateSecurityStampAsync(kullanici);
 
         var durum = kullanici.AktifMi ? "aktif" : "pasif";
         TempData["Basari"] = $"{kullanici.Ad} {kullanici.Soyad} {durum} yapıldı.";

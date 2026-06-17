@@ -41,6 +41,11 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
+builder.Services.Configure<SecurityStampValidatorOptions>(options =>
+{
+    options.ValidationInterval = TimeSpan.Zero;
+});
+
 // Servisler
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<LogService>();
