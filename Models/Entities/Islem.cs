@@ -13,11 +13,11 @@ public class Islem
     [Required, MaxLength(150)]
     public string AracSahibi { get; set; } = string.Empty;
 
-    [Required, MaxLength(20)]
-    public string Telefon { get; set; } = string.Empty;
+    [MaxLength(20)]
+    public string? Telefon { get; set; }
 
-    [Required, MaxLength(150)]
-    public string Email { get; set; } = string.Empty;
+    [MaxLength(150)]
+    public string? Email { get; set; }
 
     [Range(0, 9999999)]
     public int AracKM { get; set; }

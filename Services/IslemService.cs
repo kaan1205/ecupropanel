@@ -87,8 +87,8 @@ public class IslemService
         {
             AracPlaka = vm.AracPlaka.ToUpperInvariant().Trim(),
             AracSahibi = vm.AracSahibi.Trim(),
-            Telefon = vm.Telefon.Trim(),
-            Email = vm.Email.Trim(),
+            Telefon = vm.Telefon?.Trim(),
+            Email = vm.Email?.Trim(),
             AracKM = vm.AracKM,
             YapilanIslem = vm.YapilanIslem.Trim(),
             EkleyenKullaniciId = kullaniciId,
@@ -149,8 +149,8 @@ public class IslemService
 
         islem.AracPlaka = vm.AracPlaka.ToUpperInvariant().Trim();
         islem.AracSahibi = vm.AracSahibi.Trim();
-        islem.Telefon = vm.Telefon.Trim();
-        islem.Email = vm.Email.Trim();
+        islem.Telefon = vm.Telefon?.Trim();
+        islem.Email = vm.Email?.Trim();
         islem.AracKM = vm.AracKM;
         islem.YapilanIslem = vm.YapilanIslem.Trim();
         islem.GuncelleyenId = kullaniciId;

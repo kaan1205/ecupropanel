@@ -50,11 +50,25 @@
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <div class="form-label" style="margin-bottom:0.15rem;"><i class="bi bi-telephone me-1"></i>TELEFON</div>
-                        <a href="tel:@Model.Telefon" class="fs-5 fw-bold text-decoration-none" style="color:var(--text-ecu);">@Model.Telefon</a>
+                        @if (!string.IsNullOrEmpty(Model.Telefon))
+                        {
+                            <a href="tel:@Model.Telefon" class="fs-5 fw-bold text-decoration-none" style="color:var(--text-ecu);">@Model.Telefon</a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">—</span>
+                        }
                     </div>
                     <div class="col-md-4 mb-3">
                         <div class="form-label" style="margin-bottom:0.15rem;"><i class="bi bi-envelope me-1"></i>E-POSTA</div>
-                        <a href="mailto:@Model.Email" class="fs-5 fw-bold text-decoration-none" style="color:var(--text-ecu);">@Model.Email</a>
+                        @if (!string.IsNullOrEmpty(Model.Email))
+                        {
+                            <a href="mailto:@Model.Email" class="fs-5 fw-bold text-decoration-none" style="color:var(--text-ecu);">@Model.Email</a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">—</span>
+                        }
                     </div>
                 </div>
             </div>
